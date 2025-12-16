@@ -16,7 +16,7 @@ export default [
     children: [
       { title: 'Local Part Report', to: 'second-page' },
       { title: 'Import Part Report', to: 'second-page' },
-      { title: 'Incoming Part Report', to: 'second-page' },
+      { title: 'Incoming Part Report', to: 'iqc-incoming-part-report' },
     ],
   },
   {

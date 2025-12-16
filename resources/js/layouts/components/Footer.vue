@@ -12,11 +12,11 @@
         class="mx-1"
       />
       By <a
-        href="https://pixinvent.com"
+        href="https://github.com/muhammadIqbalK"
         target="_blank"
         rel="noopener noreferrer"
         class="text-primary ms-1"
-      >Pixinvent</a>
+      >MuhammadIqbalK</a>
     </span>
   </div>
 </template>

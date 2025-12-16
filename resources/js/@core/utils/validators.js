@@ -93,3 +93,10 @@ export const alphaDashValidator = value => {
   
   return /^[\w-]*$/.test(valueAsString) || 'All Character are not valid'
 }
+
+export const dateRangeValidator = (value) => {
+  if (isEmpty(value))
+    return true
+  
+  return value.length === 2 || 'The Date Range field format is invalid'
+}
