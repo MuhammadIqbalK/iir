@@ -1,12 +1,54 @@
 <script setup lang="ts">
-import { requiredValidator } from '@/@core/utils/validators'
-import { onMounted, ref } from 'vue'
-import type { VForm } from 'vuetify/components/VForm'
-import data from './data'
+import { requiredValidator } from '@/@core/utils/validators';
+import { onMounted, ref } from 'vue';
+import type { VForm } from 'vuetify/components/VForm';
+import data from './data';
 
 // 👉 Search 
-const items = ['11100 888 3112', '22200 888 3112', '33300 888 3112', '44400 888 3112'] as const
-const suppliers = ['Supplier 1', 'Supplier 2', 'Supplier 3', 'Supplier 4'] as const
+const items = [
+  '4206 136 58775',
+  '4206 136 58776',
+  '4206 136 58777',
+  '4206 136 58778',
+  '4206 136 58779',
+  '4206 136 58780',
+  '4206 136 58781',
+  '4206 136 58782',
+  '4206 136 58783',
+  '4206 136 58784',
+  '4206 136 58785',
+  '4206 136 58786',
+  '4206 136 58787',
+  '4206 136 58788',
+  '4206 136 58789',
+  '4206 136 58790',
+  '4206 136 58791',
+  '4206 136 58792',
+  '4206 136 58793',
+  '4206 136 58794',
+] as const;
+const suppliers = [
+  'PT Maju Jaya',
+  'Global Parts Ltd',
+  'PT Sinar Elektronik',
+  'Asia Cooling Corp',
+  'PT Daya Listrik',
+  'Mechanical World Inc',
+  'PT Kabel Nusantara',
+  'Tech Board Co',
+  'PT Tekanan Abadi',
+  'Motion System GmbH',
+  'PT Mesin Presisi',
+  'SKF Industrial',
+  'PT Seal Indonesia',
+  'SensorTech Ltd',
+  'PT Baja Ringan',
+  'Metal Works Co',
+  'PT Kabelindo',
+  'Heat Protection Inc',
+  'PT Filter Sejahtera',
+  'Oil System Ltd',
+] as const;
 const options = ['Local', 'Import'] as const
 const itemsSelect = ref<typeof items[number]>()
 const suppliersSelect = ref<typeof suppliers[number]>()
@@ -14,6 +56,7 @@ const optionsSelect = ref<typeof options[number]>()
 const form = ref<VForm>()
 
 const dateRange = ref('')
+const originalData = ref([])
 
 // 👉 Data
 
@@ -33,6 +76,8 @@ const defaultItem = ref({
   start: '',
   end: '',
   duration: '',
+  supplier: '',
+  option: '',
 })
 
 const editedItem = ref(defaultItem.value)
@@ -62,6 +107,8 @@ const headers = [
   { title: 'EXAMINER', key: 'examiner' },
   { title: 'START', key: 'start' },
   { title: 'END', key: 'end' },
+  { title: 'SUPPLIER', key: 'supplier' },
+  { title: 'OPTION', key: 'option' },
   { title: 'ACTIONS', key: 'actions' },
 ]
 
@@ -110,7 +157,57 @@ const deleteItemConfirm = () => {
   closeDelete()
 }
 
+const searchData = async () => {
+  const { valid } = await form.value?.validate()
+  if (!valid)
+    return
+
+  // Start with original data
+  let filtered = JSON.parse(JSON.stringify(originalData.value))
+
+  // Filter by item (12 NC)
+  if (itemsSelect.value) {
+    filtered = filtered.filter(item => item.itemnc.includes(itemsSelect.value))
+  }
+
+  // Filter by supplier
+  if (suppliersSelect.value) {
+    filtered = filtered.filter(item => item.supplier.includes(suppliersSelect.value))
+  }
+
+  // Filter by option
+  if (optionsSelect.value) {
+    filtered = filtered.filter(item => item.option.toLowerCase() === optionsSelect.value.toLowerCase())
+  }
+
+  // Filter by date range
+  if (dateRange.value) {
+    const dates = dateRange.value.split(' to ')
+    if (dates.length === 2) {
+      const startDate = new Date(dates[0])
+      const endDate = new Date(dates[1])
+      
+      filtered = filtered.filter(item => {
+        const itemDate = new Date(item.iirdate)
+        return itemDate >= startDate && itemDate <= endDate
+      })
+    }
+  }
+
+  userList.value = filtered
+}
+
+const resetFilter = () => {
+  form.value?.reset()
+  itemsSelect.value = undefined
+  suppliersSelect.value = undefined
+  optionsSelect.value = undefined
+  dateRange.value = ''
+  userList.value = JSON.parse(JSON.stringify(originalData.value))
+}
+
 onMounted(() => {
+  originalData.value = JSON.parse(JSON.stringify(data))
   userList.value = JSON.parse(JSON.stringify(data))
 })
 </script>
@@ -124,30 +221,30 @@ onMounted(() => {
         <VForm ref="form" lazy-validation>
           <VRow>
             <VCol cols="6">
-              <AppAutocomplete v-model="itemsSelect" :items="items" placeholder="Select an 12 NC" label="Item" name="item" />
+              <AppAutocomplete id="filter-item" v-model="itemsSelect" :items="items" placeholder="Select an 12 NC" label="Item" name="item" />
             </VCol>
 
             <VCol cols="6">
-              <AppAutocomplete v-model="suppliersSelect" :items="suppliers" placeholder="Select an Supplier" label="Supplier"
+              <AppAutocomplete id="filter-supplier" v-model="suppliersSelect" :items="suppliers" placeholder="Select an Supplier" label="Supplier"
                 name="supplier" />
             </VCol>
 
             <VCol cols="6">
-              <AppAutocomplete v-model="optionsSelect" :items="options" :rules="[requiredValidator]"
-                placeholder="Select an Option" label="Option" name="option" require />
+              <AppAutocomplete id="filter-option" v-model="optionsSelect" :items="options" :rules="[requiredValidator]"
+                placeholder="Select an Option" label="Option" name="option" required />
             </VCol>
 
             <VCol cols="6">
-              <AppDateTimePicker v-model="dateRange" label="Date Range" placeholder="Select date range"
+              <AppDateTimePicker id="filter-date-range" v-model="dateRange" label="Date Range" placeholder="Select date range"
                 :config="{ mode: 'range' }" name="dateRange" />
             </VCol>
 
             <VCol cols="12" class="d-flex flex-wrap gap-4">
-              <VBtn color="success" @click="form?.validate()">
+              <VBtn color="success" @click="searchData">
                 Search
               </VBtn>
 
-              <VBtn color="error" @click="form?.reset()">
+              <VBtn color="error" @click="resetFilter">
                 Reset Filter
               </VBtn>
             </VCol>
@@ -187,6 +284,12 @@ onMounted(() => {
     <VCard title="Add Item">
       <VCardText>
         <VRow>
+          
+      <!-- No Doc -->
+          <VCol cols="12" sm="6">
+            <AppTextField v-model="addedItem.nodoc" label="No Doc" />
+          </VCol>
+          
           <!-- IIR Date -->
           <VCol cols="12" sm="6">
             <AppTextField v-model="addedItem.iirdate" label="IIR Date" placeholder="MM/DD/YYYY" />
@@ -194,17 +297,12 @@ onMounted(() => {
 
           <!-- Item NC -->
           <VCol cols="12" sm="6">
-            <AppTextField v-model="addedItem.itemnc" label="Item NC" />
+            <AppAutocomplete v-model="addedItem.itemnc" :items="items" label="Item NC" />
           </VCol>
 
           <!-- Part Name -->
           <VCol cols="12" sm="6">
             <AppTextField v-model="addedItem.partname" label="Part Name" />
-          </VCol>
-
-          <!-- No Doc -->
-          <VCol cols="12" sm="6">
-            <AppTextField v-model="addedItem.nodoc" label="No Doc" />
           </VCol>
 
           <!-- Quantity -->
@@ -241,6 +339,16 @@ onMounted(() => {
           <VCol cols="12" sm="6">
             <AppTextField v-model="addedItem.duration" label="Duration" placeholder="HH:MM" />
           </VCol>
+
+          <!-- Supplier -->
+          <VCol cols="12" sm="6">
+            <AppAutocomplete v-model="addedItem.supplier" :items="suppliers" label="Supplier" />
+          </VCol>
+
+          <!-- Option -->
+          <VCol cols="12" sm="6">
+            <AppAutocomplete v-model="addedItem.option" :items="options" label="Option" />
+          </VCol>
         </VRow>
       </VCardText>
 
@@ -263,6 +371,12 @@ onMounted(() => {
     <VCard title="Edit Item">
       <VCardText>
         <VRow>
+          
+          <!-- No Doc -->
+          <VCol cols="12" sm="6">
+            <AppTextField v-model="editedItem.nodoc" label="No Doc" />
+          </VCol>
+
           <!-- IIR Date -->
           <VCol cols="12" sm="6">
             <AppTextField v-model="editedItem.iirdate" label="IIR Date" placeholder="MM/DD/YYYY" />
@@ -270,17 +384,12 @@ onMounted(() => {
 
           <!-- Item NC -->
           <VCol cols="12" sm="6">
-            <AppTextField v-model="editedItem.itemnc" label="Item NC" />
+            <AppAutocomplete v-model="editedItem.itemnc" :items="items" label="Item NC" />
           </VCol>
 
           <!-- Part Name -->
           <VCol cols="12" sm="6">
             <AppTextField v-model="editedItem.partname" label="Part Name" />
-          </VCol>
-
-          <!-- No Doc -->
-          <VCol cols="12" sm="6">
-            <AppTextField v-model="editedItem.nodoc" label="No Doc" />
           </VCol>
 
           <!-- Quantity -->
@@ -317,6 +426,18 @@ onMounted(() => {
           <VCol cols="12" sm="6">
             <AppTextField v-model="editedItem.duration" label="Duration" placeholder="HH:MM" />
           </VCol>
+
+          <!-- Supplier -->
+          <VCol cols="12" sm="6">
+            <AppAutocomplete v-model="editedItem.supplier" :items="suppliers" label="Supplier" />
+          </VCol>
+
+          <!-- Option -->
+          <VCol cols="12" sm="6">
+            <AppAutocomplete v-model="editedItem.option" :items="options" label="Option" />
+          </VCol>
+
+
         </VRow>
       </VCardText>
 

@@ -12,6 +12,14 @@ function recursiveLayouts(route) {
   return setupLayouts([route])[0]
 }
 
+
+const redirects = [
+  {
+    path: '/',
+    redirect: '/dashboard',
+  },
+]
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior(to) {
@@ -21,12 +29,8 @@ const router = createRouter({
     return { top: 0 }
   },
   extendRoutes: pages => [
-    ...[...pages].map(route => {
-      if (route.path === '/')
-        return { ...recursiveLayouts(route), redirect: '/login' }
-
-      return recursiveLayouts(route)
-    }),
+    ...redirects,
+    ...pages.map(route => recursiveLayouts(route))
   ],
 })
 

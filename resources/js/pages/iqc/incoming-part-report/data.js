@@ -11,6 +11,8 @@ const data = [
     start: '08:00',
     end: '09:00',
     duration: '01:00',
+    supplier: 'PT Maju Jaya',
+    option: 'local',
   },
   {
     iirdate: '09/28/2018',
@@ -24,6 +26,8 @@ const data = [
     start: '09:15',
     end: '10:45',
     duration: '01:30',
+    supplier: 'Global Parts Ltd',
+    option: 'import',
   },
   {
     iirdate: '09/29/2018',
@@ -37,6 +41,8 @@ const data = [
     start: '11:00',
     end: '12:00',
     duration: '01:00',
+    supplier: 'PT Sinar Elektronik',
+    option: 'local',
   },
   {
     iirdate: '09/30/2018',
@@ -50,6 +56,8 @@ const data = [
     start: '13:30',
     end: '15:00',
     duration: '01:30',
+    supplier: 'Asia Cooling Corp',
+    option: 'import',
   },
   {
     iirdate: '10/01/2018',
@@ -63,6 +71,8 @@ const data = [
     start: '15:15',
     end: '16:00',
     duration: '00:45',
+    supplier: 'PT Daya Listrik',
+    option: 'local',
   },
   {
     iirdate: '10/02/2018',
@@ -76,6 +86,8 @@ const data = [
     start: '08:30',
     end: '09:45',
     duration: '01:15',
+    supplier: 'Mechanical World Inc',
+    option: 'import',
   },
   {
     iirdate: '10/03/2018',
@@ -89,6 +101,8 @@ const data = [
     start: '10:00',
     end: '11:30',
     duration: '01:30',
+    supplier: 'PT Kabel Nusantara',
+    option: 'local',
   },
   {
     iirdate: '10/04/2018',
@@ -102,6 +116,8 @@ const data = [
     start: '11:45',
     end: '12:30',
     duration: '00:45',
+    supplier: 'Tech Board Co',
+    option: 'import',
   },
   {
     iirdate: '10/05/2018',
@@ -115,6 +131,8 @@ const data = [
     start: '13:00',
     end: '14:00',
     duration: '01:00',
+    supplier: 'PT Tekanan Abadi',
+    option: 'local',
   },
   {
     iirdate: '10/06/2018',
@@ -128,6 +146,8 @@ const data = [
     start: '14:15',
     end: '15:45',
     duration: '01:30',
+    supplier: 'Motion System GmbH',
+    option: 'import',
   },
   {
     iirdate: '10/07/2018',
@@ -141,6 +161,8 @@ const data = [
     start: '08:00',
     end: '09:15',
     duration: '01:15',
+    supplier: 'PT Mesin Presisi',
+    option: 'local',
   },
   {
     iirdate: '10/08/2018',
@@ -154,6 +176,8 @@ const data = [
     start: '09:30',
     end: '10:30',
     duration: '01:00',
+    supplier: 'SKF Industrial',
+    option: 'import',
   },
   {
     iirdate: '10/09/2018',
@@ -167,6 +191,8 @@ const data = [
     start: '10:45',
     end: '11:45',
     duration: '01:00',
+    supplier: 'PT Seal Indonesia',
+    option: 'local',
   },
   {
     iirdate: '10/10/2018',
@@ -180,6 +206,8 @@ const data = [
     start: '12:00',
     end: '13:00',
     duration: '01:00',
+    supplier: 'SensorTech Ltd',
+    option: 'import',
   },
   {
     iirdate: '10/11/2018',
@@ -193,6 +221,8 @@ const data = [
     start: '13:15',
     end: '14:45',
     duration: '01:30',
+    supplier: 'PT Baja Ringan',
+    option: 'local',
   },
   {
     iirdate: '10/12/2018',
@@ -206,6 +236,8 @@ const data = [
     start: '15:00',
     end: '15:45',
     duration: '00:45',
+    supplier: 'Metal Works Co',
+    option: 'import',
   },
   {
     iirdate: '10/13/2018',
@@ -219,6 +251,8 @@ const data = [
     start: '08:15',
     end: '09:30',
     duration: '01:15',
+    supplier: 'PT Kabelindo',
+    option: 'local',
   },
   {
     iirdate: '10/14/2018',
@@ -232,6 +266,8 @@ const data = [
     start: '09:45',
     end: '10:45',
     duration: '01:00',
+    supplier: 'Heat Protection Inc',
+    option: 'import',
   },
   {
     iirdate: '10/15/2018',
@@ -245,6 +281,8 @@ const data = [
     start: '11:00',
     end: '12:30',
     duration: '01:30',
+    supplier: 'PT Filter Sejahtera',
+    option: 'local',
   },
   {
     iirdate: '10/16/2018',
@@ -258,6 +296,8 @@ const data = [
     start: '13:00',
     end: '14:00',
     duration: '01:00',
+    supplier: 'Oil System Ltd',
+    option: 'import',
   },
 ];
 
