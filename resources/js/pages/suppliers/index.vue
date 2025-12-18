@@ -252,7 +252,7 @@ onMounted(() => {
 
           <!-- Status -->
           <VCol cols="12" sm="6">
-            <AppSelect id="add-status"; v-model="addedItem.status" :items="statuses" label="Status" />
+            <AppSelect id="add-status" v-model="addedItem.status" :items="statuses" label="Status" />
           </VCol>
         </VRow>
       </VCardText>
@@ -308,7 +308,7 @@ onMounted(() => {
 
           <!-- Status -->
           <VCol cols="12" sm="6">
-            <AppSelect; v-model="editedItem.status" :items="statuses" label="Status" />
+            <AppSelect v-model="editedItem.status" :items="statuses" label="Status" />
           </VCol>
         </VRow>
       </VCardText>

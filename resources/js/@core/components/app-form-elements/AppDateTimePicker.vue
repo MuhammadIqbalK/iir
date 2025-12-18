@@ -65,16 +65,38 @@ const { focused } = useFocus(refFlatPicker)
 const isCalendarOpen = ref(false)
 const isInlinePicker = ref(false)
 
+const elementId = computed(() => {
+  const _elementIdToken = fieldProps.value.id || fieldProps.value.label
+  
+  return _elementIdToken ? `app-picker-field-${ _elementIdToken }-${ Math.random().toString(36).slice(2, 7) }` : undefined
+})
+
 // flat picker prop manipulation
 if (compAttrs.config && compAttrs.config.inline) {
   isInlinePicker.value = compAttrs.config.inline
   Object.assign(compAttrs, { altInputClass: 'inlinePicker' })
 }
-compAttrs.config = {
+
+// Merge config and add the ID to the input element via onReady hook
+const flatPickrConfig = computed(() => ({
   ...compAttrs.config,
   prevArrow: '<i class="tabler-chevron-left v-icon" style="font-size: 20px; height: 20px; width: 20px;"></i>',
   nextArrow: '<i class="tabler-chevron-right v-icon" style="font-size: 20px; height: 20px; width: 20px;"></i>',
-}
+  onReady: (selectedDates, dateStr, instance) => {
+    // Set the ID on the actual visible input element
+    if (elementId.value) {
+      // If altInput is enabled, the altInput is the visible input
+      const targetInput = instance.altInput || instance.input
+      if (targetInput) {
+        targetInput.setAttribute('id', elementId.value)
+      }
+    }
+    // Call original onReady if it exists
+    if (compAttrs.config?.onReady) {
+      compAttrs.config.onReady(selectedDates, dateStr, instance)
+    }
+  }
+}))
 
 const onClear = el => {
   el.stopPropagation()
@@ -114,14 +136,6 @@ watch(() => props, () => {
 }, {
   deep: true,
   immediate: true,
-})
-
-const elementId = computed(() => {
-
-
-  const _elementIdToken = fieldProps.value.id || fieldProps.value.label
-  
-  return _elementIdToken ? `app-picker-field-${ _elementIdToken }-${ Math.random().toString(36).slice(2, 7) }` : undefined
 })
 </script>
 
@@ -165,7 +179,7 @@ const elementId = computed(() => {
               <!-- flat-picker  -->
               <FlatPickr
                 v-if="!isInlinePicker"
-                v-bind="compAttrs"
+                v-bind="{ ...compAttrs, config: flatPickrConfig }"
                 ref="refFlatPicker"
                 :model-value="modelValue"
                 :placeholder="props.placeholder"
@@ -180,6 +194,7 @@ const elementId = computed(() => {
               <!-- simple input for inline prop -->
               <input
                 v-if="isInlinePicker"
+                :id="elementId"
                 :value="modelValue"
                 :placeholder="props.placeholder"
                 :readonly="isReadonly.value"
@@ -195,7 +210,7 @@ const elementId = computed(() => {
     <!-- flat picker for inline props -->
     <FlatPickr
       v-if="isInlinePicker"
-      v-bind="compAttrs"
+      v-bind="{ ...compAttrs, config: flatPickrConfig }"
       ref="refFlatPicker"
       :model-value="modelValue"
       @update:model-value="emitModelValue"

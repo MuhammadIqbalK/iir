@@ -235,7 +235,7 @@ onMounted(() => {
             </VCol>
 
             <VCol cols="6">
-              <AppDateTimePicker id="filter-date-range" v-model="dateRange" label="Date Range" placeholder="Select date range"
+              <AppDateTimePicker v-model="dateRange" label="Date Range" placeholder="Select date range"
                 :config="{ mode: 'range' }" name="dateRange" />
             </VCol>
 

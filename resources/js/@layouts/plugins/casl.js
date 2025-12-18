@@ -14,6 +14,10 @@ export const can = (action, subject) => {
   const vm = getCurrentInstance()
   if (!vm)
     return false
+
+  if (!action || !subject)
+    return true
+
   const localCan = vm.proxy && '$can' in vm.proxy
     
   return localCan ? vm.proxy?.$can(action, subject) : true
