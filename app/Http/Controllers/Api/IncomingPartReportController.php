@@ -11,9 +11,27 @@ class IncomingPartReportController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return IncomingPartReport::latest()->paginate(10);
+        $page = $request->get('page', 1);
+        $perPage = $request->get('per_page', 10);
+        $search = [
+            'itemnc' => $request->get('itemnc', ''),
+            'supplier' => $request->get('supplier', ''),
+            'option' => $request->get('option', ''),
+            'startdate' => $request->get('startdate', ''),
+            'enddate' => $request->get('enddate', ''),
+        ];
+
+
+        $result = IncomingPartReport::getAll($page, $perPage, $search);
+
+        return response()->json([
+            'data' => $result['data'],
+            'total' => $result['total'],
+            'page' => $page,
+            'per_page' => $perPage
+        ]);
     }
 
     /**
@@ -24,16 +42,15 @@ class IncomingPartReportController extends Controller
         $validated = $request->validate([
             'iirdate' => 'required|date',
             'itemnc' => 'required|string',
-            'partname' => 'required|string',
             'nodoc' => 'required|string',
             'quantity' => 'required|integer',
             'samplesize' => 'required|integer',
             'gilevel' => 'required|integer',
-            'examiner' => 'required|string',
+            'examiner_id' => 'required|integer',
             'start' => 'required',
             'end' => 'required',
             'duration' => 'required|string',
-            'supplier' => 'required|string',
+            'supplier_code' => 'required|string',
             'option' => 'required|string',
         ]);
 
@@ -45,9 +62,14 @@ class IncomingPartReportController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(IncomingPartReport $incomingPartReport)
+    public function show($id)
     {
-        return $incomingPartReport;
+
+        $result = IncomingPartReport::getById($id);
+
+        return response()->json([
+            'data' => $result
+        ]);
     }
 
     /**
@@ -56,19 +78,18 @@ class IncomingPartReportController extends Controller
     public function update(Request $request, IncomingPartReport $incomingPartReport)
     {
         $validated = $request->validate([
-            'iirdate' => 'sometimes|date',
-            'itemnc' => 'sometimes|string',
-            'partname' => 'sometimes|string',
-            'nodoc' => 'sometimes|string',
-            'quantity' => 'sometimes|integer',
-            'samplesize' => 'sometimes|integer',
-            'gilevel' => 'sometimes|integer',
-            'examiner' => 'sometimes|string',
-            'start' => 'sometimes',
-            'end' => 'sometimes',
-            'duration' => 'sometimes|string',
-            'supplier' => 'sometimes|string',
-            'option' => 'sometimes|string',
+            'iirdate' => 'required|date',
+            'itemnc' => 'required|string',
+            'nodoc' => 'required|string',
+            'quantity' => 'required|integer',
+            'samplesize' => 'required|integer',
+            'gilevel' => 'required|integer',
+            'examiner_id' => 'required|integer',
+            'start' => 'required',
+            'end' => 'required',
+            'duration' => 'required|string',
+            'supplier_code' => 'required|string',
+            'option' => 'required|string',
         ]);
 
         $incomingPartReport->update($validated);
@@ -83,6 +104,6 @@ class IncomingPartReportController extends Controller
     {
         $incomingPartReport->delete();
 
-        return response()->noContent();
+        return response()->json('iir is deleted succesfully', 200);
     }
 }

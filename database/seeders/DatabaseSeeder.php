@@ -16,15 +16,18 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
+            'userid' => 'TESTUSER01',
+            'firstname' => 'Test',
+            'lastname' => 'User',
             'email' => 'test@example.com',
+            'password' => bcrypt('secret'), // password bisa diubah sesuai kebutuhan
         ]);
 
         $this->call([
-            IncomingPartReportSeeder::class,
             SupplierSeeder::class,
             ExaminerSeeder::class,
             ItemncSeeder::class,
+            IncomingPartReportSeeder::class,
         ]);
     }
 }

@@ -14,16 +14,15 @@ return new class extends Migration {
             $table->id();
             $table->date('iirdate');
             $table->string('itemnc');
-            $table->string('partname');
             $table->string('nodoc');
             $table->integer('quantity');
             $table->integer('samplesize');
             $table->integer('gilevel');
-            $table->string('examiner');
+            $table->integer('examiner_id');
             $table->time('start');
             $table->time('end');
             $table->string('duration');
-            $table->string('supplier');
+            $table->string('supplier_code');
             $table->string('option');
             $table->timestamps();
         });
@@ -32,7 +31,7 @@ return new class extends Migration {
             $table->index('itemnc');
             $table->index('iirdate');
             $table->index('option');
-            $table->index('supplier');
+            $table->index('supplier_code');
         });
     }
 
@@ -46,7 +45,7 @@ return new class extends Migration {
             $table->dropIndex('itemnc');
             $table->dropIndex('iirdate');
             $table->dropIndex('option');
-            $table->dropIndex('supplier');
+            $table->dropIndex('supplier_code');
         });
     }
 };

@@ -3,16 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 
-route::group([
-    'prefix' => 'api',
-], function () {
-    route::get('/test', function () {
-        $users = DB::select('SELECT * FROM users');
-        return $users;
-    });
-});
+// API routes are handled in routes/api.php
 
 Route::get('/{any?}', function () {
     return view('application');
-})->where('any', '.*');
+})->where('any', '^(?!api).*$');
 

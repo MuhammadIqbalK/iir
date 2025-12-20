@@ -94,7 +94,7 @@ export const alphaDashValidator = value => {
   return /^[\w-]*$/.test(valueAsString) || 'All Character are not valid'
 }
 
-export const dateRangeValidator = (value) => {
+export const dateRangeValidator = value => {
   if (isEmpty(value))
     return true
   

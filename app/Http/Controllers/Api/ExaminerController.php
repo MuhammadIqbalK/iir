@@ -13,7 +13,24 @@ class ExaminerController extends Controller
      */
     public function index()
     {
-        return Examiner::latest()->paginate(10);
+        $result = Examiner::select('*')
+                        ->orderBy('name','asc')
+                        ->get();
+
+        return response()->json([
+           'data' => $result,
+        ]);
+    }
+
+    public function examinerDropdown()
+    {
+        $result = Examiner::select('id','name')
+                        ->orderBy('name','asc')
+                        ->get();
+
+        return response()->json([
+            'data' => $result
+        ]);
     }
 
     /**

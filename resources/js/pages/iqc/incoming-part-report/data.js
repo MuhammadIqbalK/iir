@@ -299,6 +299,6 @@ const data = [
     supplier: 'Oil System Ltd',
     option: 'import',
   },
-];
+]
 
-export default data;
+export default data

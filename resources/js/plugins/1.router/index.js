@@ -30,7 +30,7 @@ const router = createRouter({
   },
   extendRoutes: pages => [
     ...redirects,
-    ...pages.map(route => recursiveLayouts(route))
+    ...pages.map(route => recursiveLayouts(route)),
   ],
 })
 

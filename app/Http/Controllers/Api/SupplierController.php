@@ -11,9 +11,49 @@ class SupplierController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Supplier::latest()->paginate(10);
+        $page = $request->get('page', 1);
+        $perPage = $request->get('per_page', 10);
+
+        $query = Supplier::query();
+
+        if ($request->has('supplier_name') && $request->supplier_name != '') {
+            $query->where('supplier_name', 'ILIKE', '%' . $request->supplier_name . '%');
+        }
+
+        if ($request->has('supplier_code') && $request->supplier_code != '') {
+            $query->where('supplier_code', 'ILIKE', '%' . $request->supplier_code . '%');
+        }
+
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        $total = $query->count();
+        $result = $query->orderBy('supplier_name', 'asc')
+            ->offset(($page - 1) * $perPage)
+            ->limit($perPage)
+            ->get();
+
+        return response()->json([
+            'data' => $result,
+            'total' => $total,
+            'page' => $page,
+            'per_page' => $perPage
+        ]);
+    }
+
+    public function supplierDropdown()
+    {
+        $result = Supplier::select('id', 'supplier_code', 'supplier_name')
+            ->where('status', 'Active')
+            ->orderBy('supplier_name', 'asc')
+            ->get();
+
+        return response()->json([
+            'data' => $result
+        ]);
     }
 
     /**
@@ -22,9 +62,9 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'supplierName' => 'required|string',
-            'supplierCode' => 'required|string|unique:suppliers,supplierCode',
-            'contactPerson' => 'required|string',
+            'supplier_name' => 'required|string',
+            'supplier_code' => 'required|string|unique:suppliers,supplier_code',
+            'contact_person' => 'required|string',
             'email' => 'required|email',
             'phone' => 'required|string',
             'address' => 'required|string',
@@ -50,13 +90,13 @@ class SupplierController extends Controller
     public function update(Request $request, Supplier $supplier)
     {
         $validated = $request->validate([
-            'supplierName' => 'sometimes|string',
-            'supplierCode' => 'sometimes|string|unique:suppliers,supplierCode,' . $supplier->id,
-            'contactPerson' => 'sometimes|string',
-            'email' => 'sometimes|email',
-            'phone' => 'sometimes|string',
-            'address' => 'sometimes|string',
-            'status' => 'sometimes|string',
+            'supplier_name' => 'required|string',
+            'supplier_code' => 'required|string|unique:suppliers,supplier_code,' . $supplier->id,
+            'contact_person' => 'required|string',
+            'email' => 'required|email',
+            'phone' => 'required|string',
+            'address' => 'required|string',
+            'status' => 'required|string',
         ]);
 
         $supplier->update($validated);

@@ -12,9 +12,9 @@ return new class extends Migration {
     {
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
-            $table->string('supplierName');
-            $table->string('supplierCode')->unique();
-            $table->string('contactPerson');
+            $table->string('supplier_name');
+            $table->string('supplier_code')->unique();
+            $table->string('contact_person');
             $table->string('email');
             $table->string('phone');
             $table->string('address');
@@ -23,8 +23,8 @@ return new class extends Migration {
         });
 
         Schema::table('suppliers', function (Blueprint $table) {
-            $table->index('supplierCode');
-            $table->index('supplierName');
+            $table->index('supplier_code');
+            $table->index('supplier_name');
         });
     }
 
@@ -35,8 +35,8 @@ return new class extends Migration {
     {
         Schema::dropIfExists('suppliers');
         Schema::table('suppliers', function (Blueprint $table) {
-            $table->dropIndex('supplierCode');
-            $table->dropIndex('supplierName');
+            $table->dropIndex('supplier_code');
+            $table->dropIndex('supplier_name');
         });
     }
 };

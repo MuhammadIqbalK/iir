@@ -13,7 +13,24 @@ class ItemncController extends Controller
      */
     public function index()
     {
-        return Itemnc::latest()->paginate(10);
+        $result = Itemnc::select('*')
+                        ->orderBy('item12nc','asc')
+                        ->get();
+
+        return response()->json([
+            'data' => $result
+        ]);
+    }
+
+    public function itemncDropdown()
+    {
+        $result = Itemnc::select('id','item12nc','partname')
+                        ->orderBy('item12nc','asc')
+                        ->get();
+
+        return response()->json([
+            'data' => $result
+        ]);
     }
 
     /**

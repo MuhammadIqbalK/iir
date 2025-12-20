@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,21 +11,34 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    // Custom primary key
+    protected $primaryKey = 'userid';
+    public $incrementing = false; // karena primary key bukan auto-increment
+    protected $keyType = 'string';
+
+    // Tabel yang digunakan (opsional jika default 'users')
+    protected $table = 'users';
+
     /**
      * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'userid',
         'password',
+        'firstname',
+        'lastname',
+        'groupid',
+        'statuslogin',
+        'menusecurity',
+        'lastmoduser',
+        'lastmoddate',
+        'email',
+        'email_verified_at',
+        'properties',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
+     * The attributes that should be hidden for arrays.
      */
     protected $hidden = [
         'password',
@@ -33,15 +46,19 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * The attributes that should be cast.
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'lastmoddate' => 'datetime',
+        'properties' => 'array',
+    ];
+
+    /**
+     * Automatically hash password when setting it.
+     */
+    public function setPasswordAttribute($password)
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        $this->attributes['password'] = bcrypt($password);
     }
 }

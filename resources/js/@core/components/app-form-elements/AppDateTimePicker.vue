@@ -91,11 +91,12 @@ const flatPickrConfig = computed(() => ({
         targetInput.setAttribute('id', elementId.value)
       }
     }
+
     // Call original onReady if it exists
     if (compAttrs.config?.onReady) {
       compAttrs.config.onReady(selectedDates, dateStr, instance)
     }
-  }
+  },
 }))
 
 const onClear = el => {

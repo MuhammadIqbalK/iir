@@ -4,6 +4,7 @@ export default [
     to: { name: 'dashboard' },
     icon: { icon: 'tabler-smart-home' },
   },
+
   // {
   //   title: 'Materials',
   //   to: { name: 'materials' },
@@ -24,6 +25,7 @@ export default [
     to: { name: 'suppliers' },
     icon: { icon: 'tabler-shopping-cart' },
   },
+
   // {
   //   title: 'QC Handover',
   //   to: { name: 'qc-handovers' },

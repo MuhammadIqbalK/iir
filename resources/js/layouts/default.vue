@@ -50,7 +50,7 @@ watch([
       </Suspense>
     </RouterView>
   </Component>
-      <TheCustomizer />
+  <TheCustomizer />
 </template>
 
 <style lang="scss">
