@@ -1,0 +1,12 @@
+.git
+.env
+node_modules
+vendor
+public/build
+storage/*.key
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+# docker (removed to allow COPY commands in Dockerfile)
+.phpunit.result.cache

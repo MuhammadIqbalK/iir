@@ -1,0 +1,95 @@
+services:
+  # Laravel Application Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: iir_laravel_prod
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+      - ./public_html:/var/www/public
+      - vendor_cache:/var/www/vendor
+    networks:
+      - iir_network
+    depends_on:
+      - redis
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_URL=${APP_URL:-http://localhost}
+      - DB_CONNECTION=pgsql
+      - DB_HOST=${DB_HOST:-localhost}
+      - DB_PORT=5432
+      - DB_DATABASE=${DB_DATABASE:-iir_production}
+      - DB_USERNAME=${DB_USERNAME:-iir_user}
+      - DB_PASSWORD=${DB_PASSWORD:-secure_password}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=null
+      - REDIS_PORT=6379
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+
+  # Nginx Web Server
+  nginx:
+    image: nginx:alpine
+    container_name: iir_nginx_prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./public_html:/var/www/public
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/sites/:/etc/nginx/sites-available/
+      - ./docker/nginx/ssl/:/etc/nginx/ssl/
+    networks:
+      - iir_network
+    depends_on:
+      - app
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: iir_redis_prod
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - iir_network
+    command: redis-server --appendonly yes
+
+  # Node.js for Build Process (optional - can be removed after build)
+  node:
+    image: node:22-alpine
+    container_name: iir_node_build
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: >
+      sh -c "
+        if [ ! -d 'public_html/build' ]; then
+          pnpm install &&
+          pnpm run build &&
+          cp -r public/* public_html/ &&
+          cp -r dist/* public_html/build/ 2>/dev/null || echo 'No dist folder found'
+        fi
+      "
+    networks:
+      - iir_network
+    profiles:
+      - build
+
+networks:
+  iir_network:
+    driver: bridge
+
+volumes:
+  redis_data:
+    driver: local
+  vendor_cache:
+    driver: local

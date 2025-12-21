@@ -1,0 +1,88 @@
+# Use PHP 8.3 FPM as base image
+FROM php:8.3-fpm-alpine
+
+# Set working directory
+WORKDIR /var/www
+
+# Install system dependencies
+RUN apk add --no-cache \
+    git \
+    curl \
+    libpng-dev \
+    oniguruma-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    libzip-dev \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    jpeg-dev \
+    libwebp-dev \
+    postgresql-dev \
+    libpq-dev \
+    gnu-libiconv
+
+# Install PHP extensions
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install -j$(nproc) \
+    gd \
+    pdo_mysql \
+    mysqli \
+    pdo_pgsql \
+    pgsql \
+    zip \
+    bcmath \
+    opcache \
+    xml \
+    ctype \
+    intl \
+    dom \
+    fileinfo
+
+# Install and configure Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Install Node.js and pnpm for build process
+RUN apk add --no-cache nodejs npm && \
+    npm install -g pnpm
+
+# Set correct permissions (www-data group already exists in base image)
+RUN adduser -S www-data -u 1000 -G www-data || true
+
+# Copy composer files first for better layer caching
+COPY --chown=www-data:www-data composer.json composer.lock ./
+
+# Install PHP dependencies including predis
+RUN composer install --no-dev --optimize-autoloader --no-scripts && \
+    composer require predis/predis --no-update
+
+# Copy rest of application
+COPY --chown=www-data:www-data . /var/www
+
+# Copy production environment file
+RUN cp /var/www/.env /var/www/.env.production 2>/dev/null || echo "No .env file to copy"
+
+# Install Node dependencies and build assets
+RUN pnpm install && pnpm run build
+
+# Copy built assets to public directory
+RUN mkdir -p /var/www/public/build && \
+    cp -r dist/* /var/www/public/build/ 2>/dev/null || echo "No dist folder found" && \
+    cp -r public/* /var/www/public/ 2>/dev/null || echo "Public files already in place"
+
+# Set correct permissions for storage and cache directories
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache && \
+    chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
+# Optimize Laravel for production
+RUN php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan view:cache
+
+# Expose port 9000 for PHP-FPM
+EXPOSE 9000
+
+# Start PHP-FPM
+CMD ["php-fpm"]

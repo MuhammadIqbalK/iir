@@ -1,0 +1,10 @@
+    /**$
+     * Remove the specified resource from storage.$
+     */$
+    public function destroy(IncomingPartReport $incomingPartReport)$
+    {$
+        $incomingPartReport->delete();$
+$
+        return response()->json('iir is deleted succesfully', 200);$
+    }$
+}$

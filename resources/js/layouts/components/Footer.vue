@@ -4,13 +4,7 @@
     <span class="d-flex align-center text-medium-emphasis">
       &copy;
       {{ new Date().getFullYear() }}
-      Made With
-      <VIcon
-        icon="tabler-heart-filled"
-        color="error"
-        size="1.25rem"
-        class="mx-1"
-      />
+      Made
       By <a
         href="https://github.com/muhammadIqbalK"
         target="_blank"
