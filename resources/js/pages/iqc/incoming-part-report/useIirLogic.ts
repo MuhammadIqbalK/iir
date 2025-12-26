@@ -153,11 +153,9 @@ export const useIirLogic = () => {
     }
   }
 
-  const buildPrintUrl = (type: 'Global' | 'Recap') => {
-    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '/api'
-    const baseUrl = `${apiBaseUrl}/ipr-excel-${type.toLowerCase()}`
+  const buildPrintParams = () => {
     const params: any = {
-      page: 1,
+      page:1,
       per_page: 10,
     }
 
@@ -176,18 +174,55 @@ export const useIirLogic = () => {
       }
     }
 
-    const queryString = new URLSearchParams(params).toString()
-    return `${baseUrl}?${queryString}`
+    return params
   }
 
-  const printGlobal = () => {
-    const url = buildPrintUrl('Global')
-    window.open(url, '_blank')
+  const printGlobal = async () => {
+    try {
+      const params = buildPrintParams()
+      const response = await $api('/api/ipr-excel-global', { 
+        params,
+        responseType: 'blob'
+      })
+      
+      // Create download link
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `IPR-Global-${new Date().toISOString().split('T')[0]}.xlsx`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('Error printing global:', error)
+      showMessage('Error', 'Failed to print Global report', 'error')
+    }
   }
 
-  const printRecap = () => {
-    const url = buildPrintUrl('Recap')
-    window.open(url, '_blank')
+  const printRecap = async () => {
+    try {
+      const params = buildPrintParams()
+      const response = await $api('/api/ipr-excel-recap', { 
+        params,
+        responseType: 'blob'
+      })
+      
+      // Create download link
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `IPR-Recap-${new Date().toISOString().split('T')[0]}.xlsx`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('Error printing recap:', error)
+      showMessage('Error', 'Failed to print Recap report', 'error')
+    }
   }
 
 
