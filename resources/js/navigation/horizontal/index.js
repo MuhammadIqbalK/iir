@@ -1,15 +1,15 @@
 export default [
   {
-    title: 'Dashboard',
-    to: { name: 'dashboard' },
-    icon: { icon: 'tabler-smart-home' },
+    // title: 'Dashboard',
+    // to: { name: 'dashboard' },
+    // icon: { icon: 'tabler-smart-home' },
   },
 
-  // {
-  //   title: 'Materials',
-  //   to: { name: 'materials' },
-  //   icon: { icon: 'tabler-box' },
-  // },
+  {
+    title: 'Materials',
+    to: { name: 'materials' },
+    icon: { icon: 'tabler-box' },
+  },
   {
     title: 'IQC',
     to: { name: 'iqc' },

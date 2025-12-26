@@ -8,8 +8,8 @@ import { useIirLogic } from './useIirLogic'
 
 const {
   // State
-  items, itemsDialog, suppliers, examiners, options,
-  itemsSelect, suppliersSelect, optionsSelect, dateRange, filterForm,
+  items, itemsDialog, suppliers, examiners, options,statuses,
+  itemsSelect, suppliersSelect, optionsSelect, statusSelect, dateRange, filterForm,
   editDialog, addDialog, deleteDialog, messageDialog,
   refForm, refEditForm,
   editedItem, editedIndex, addedItem,
@@ -18,7 +18,7 @@ const {
   
   // Methods
   fetchTableData, editItem, addItem, deleteItem, close, closeDelete,
-  save, deleteItemConfirm, searchData, resetFilter
+  save, deleteItemConfirm, searchData, resetFilter, printGlobal, printRecap
 } = useIirLogic()
 
 const headers = [
@@ -34,6 +34,8 @@ const headers = [
   { title: 'END', key: 'end' },
   { title: 'SUPPLIER', key: 'supplier_name' },
   { title: 'OPTION', key: 'option' },
+  { title: 'BATCH', key: 'batch' },
+  { title: 'STATUS', key: 'status' },
   { title: 'ACTIONS', key: 'actions', sortable: false },
 ]
 </script>
@@ -51,6 +53,8 @@ const headers = [
       :options="options"
       @search="searchData"
       @reset="resetFilter"
+      @Global="printGlobal"
+      @Recap="printRecap"
     />
 
     <!-- (2) DATA TABLE -->
@@ -77,6 +81,7 @@ const headers = [
       :examiners="examiners"
       :suppliers="suppliers"
       :options="options"
+      :statuses="statuses"
       @save="save"
       @close="close"
     />
@@ -91,6 +96,7 @@ const headers = [
       :examiners="examiners"
       :suppliers="suppliers"
       :options="options"
+      :statuses="statuses"
       @save="save"
       @close="close"
     />

@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\IncomingPartReport;
 use Illuminate\Http\Request;
+use App\Exports\IncomingPartReportGlobalExport;
+use App\Exports\IncomingPartReportRecapExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class IncomingPartReportController extends Controller
 {
@@ -52,6 +55,8 @@ class IncomingPartReportController extends Controller
             'duration' => 'required|string',
             'supplier_code' => 'required|string',
             'option' => 'required|string',
+            'batch' => 'required|integer',
+            'status' => 'required|string|in:N,Y',
         ]);
 
         $report = IncomingPartReport::create($validated);
@@ -90,6 +95,8 @@ class IncomingPartReportController extends Controller
             'duration' => 'required|string',
             'supplier_code' => 'required|string',
             'option' => 'required|string',
+            'batch' => 'required|integer',
+            'status' => 'required|string|in:N,Y',
         ]);
 
         $incomingPartReport->update($validated);
@@ -105,5 +112,57 @@ class IncomingPartReportController extends Controller
         $incomingPartReport->delete();
 
         return response()->json('iir is deleted succesfully', 200);
+    }
+
+     /**
+     * Export Tipe 1 - Detail Report (Excel)
+     */
+    public function exportType1(Request $request)
+    {
+        $validated = [
+            'itemnc' => $request->get('itemnc', ''),
+            'supplier' => $request->get('supplier', ''),
+            'option' => $request->get('option', ''),
+            'startdate' => $request->get('startdate', ''),
+            'enddate' => $request->get('enddate', ''),
+        ];
+        
+        $filters = $request->only([
+            'itemnc',
+            'supplier',
+            'startdate',
+            'enddate', 
+            'option'
+        ]);
+        
+        $filename = 'iir_detail_report_' . date('Ymd_His') . '.xlsx';
+        
+        return Excel::download(new IncomingPartReportGlobalExport($filters), $filename);
+    }
+    
+    /**
+     * Export Tipe 2 - Summary Report (Excel)
+     */
+    public function exportType2(Request $request)
+    {
+        $validated = [
+            'itemnc' => $request->get('itemnc', ''),
+            'supplier' => $request->get('supplier', ''),
+            'option' => $request->get('option', ''),
+            'startdate' => $request->get('startdate', ''),
+            'enddate' => $request->get('enddate', ''),
+        ];
+        
+        $filters = $request->only([
+            'itemnc',
+            'supplier',
+            'startdate',
+            'enddate', 
+            'option'
+        ]);
+        
+        $filename = 'iir_summary_report_' . date('Ymd_His') . '.xlsx';
+        
+        return Excel::download(new IncomingPartReportRecapExport($filters), $filename);
     }
 }

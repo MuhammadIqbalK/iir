@@ -8,6 +8,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::apiResource('incoming-part-reports', \App\Http\Controllers\Api\IncomingPartReportController::class);
+Route::get('ipr-excel-global', [\App\Http\Controllers\Api\IncomingPartReportController::class, 'exportType1']);
+Route::get('ipr-excel-recap', [\App\Http\Controllers\Api\IncomingPartReportController::class, 'exportType2']);
 
 Route::apiResource('suppliers', \App\Http\Controllers\Api\SupplierController::class);
 Route::get('suppliers-dropdown', [\App\Http\Controllers\Api\SupplierController::class, 'supplierDropdown']);

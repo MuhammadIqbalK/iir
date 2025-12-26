@@ -10,10 +10,12 @@ export const useIirLogic = () => {
   const suppliers = ref([])
   const examiners = ref([])
   const options = ['Local', 'Import'] as const
+  const statuses = ['Y', 'N'] as const
 
   const itemsSelect = ref()
   const suppliersSelect = ref()
   const optionsSelect = ref()
+  const statusSelect = ref()
   const dateRange = ref('')
   const filterForm = ref<VForm>()
 
@@ -42,6 +44,8 @@ export const useIirLogic = () => {
     duration: '',
     supplier_code: '',
     option: '',
+    batch: 1,
+    status: '',
   }
 
   const editViewItem = {
@@ -61,6 +65,8 @@ export const useIirLogic = () => {
     supplier_code: '',
     supplier_name: '',
     option: '',
+    batch: 1,
+    status: '',
   }
 
   const editedItem = ref({ ...editViewItem })
@@ -123,6 +129,9 @@ export const useIirLogic = () => {
         if (dates.length === 2) {
           params.startdate = dates[0]
           params.enddate = dates[1]
+        } else if (dates.length === 1) {
+          params.startdate = dates[0]
+          params.enddate = dates[0]
         }
       }
 
@@ -143,6 +152,43 @@ export const useIirLogic = () => {
       loading.value = false
     }
   }
+
+  const buildPrintUrl = (type: 'Global' | 'Recap') => {
+    const baseUrl = `http://localhost/api/ipr-excel-${type.toLowerCase()}`
+    const params: any = {
+      page: 1,
+      per_page: 10,
+    }
+
+    if (itemsSelect.value) params.itemnc = itemsSelect.value
+    if (suppliersSelect.value) params.supplier = suppliersSelect.value
+    if (optionsSelect.value) params.option = optionsSelect.value
+    
+    if (dateRange.value) {
+      const dates = dateRange.value.split(' to ')
+      if (dates.length === 2) {
+        params.startdate = dates[0]
+        params.enddate = dates[1]
+      } else if (dates.length === 1) {
+        params.startdate = dates[0]
+        params.enddate = dates[0]
+      }
+    }
+
+    const queryString = new URLSearchParams(params).toString()
+    return `${baseUrl}?${queryString}`
+  }
+
+  const printGlobal = () => {
+    const url = buildPrintUrl('Global')
+    window.open(url, '_blank')
+  }
+
+  const printRecap = () => {
+    const url = buildPrintUrl('Recap')
+    window.open(url, '_blank')
+  }
+
 
   const calculateDuration = (start: string, end: string) => {
     if (!start || !end) return ''
@@ -325,8 +371,8 @@ export const useIirLogic = () => {
 
   return {
     // State
-    items, itemsDialog, suppliers, examiners, options,
-    itemsSelect, suppliersSelect, optionsSelect, dateRange, filterForm,
+    items, itemsDialog, suppliers, examiners, options,statuses,
+    itemsSelect, suppliersSelect, optionsSelect, dateRange, filterForm,statusSelect,
     editDialog, addDialog, deleteDialog, messageDialog,
     refForm, refEditForm,
     editedItem, editedIndex, addedItem,
@@ -335,6 +381,6 @@ export const useIirLogic = () => {
     
     // Methods
     fetchTableData, editItem, addItem, deleteItem, close, closeDelete,
-    save, deleteItemConfirm, searchData, resetFilter
+    save, deleteItemConfirm, searchData, resetFilter, printGlobal, printRecap
   }
 }

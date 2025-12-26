@@ -12,8 +12,10 @@ class Itemnc extends Model
     protected $fillable = [
         'item12nc',
         'partname',
+        'type',
         'quality',
         'quantity',
+        'unit',
         'status',
     ];
 }

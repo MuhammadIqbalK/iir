@@ -21,6 +21,8 @@ class IncomingPartReport extends Model
         'start',
         'end',
         'duration',
+        'batch',
+        'status',
         'supplier_code',
         'option',
     ];
@@ -86,7 +88,9 @@ class IncomingPartReport extends Model
                 a.duration,
                 c.supplier_name,
                 a.supplier_code,
-                a.option
+                a.option,
+                a.batch,
+                a.status
             FROM incoming_part_reports a 
             JOIN examiners b ON a.examiner_id = b.id
             JOIN suppliers c ON a.supplier_code = c.supplier_code
@@ -127,7 +131,9 @@ class IncomingPartReport extends Model
             a.duration,
             c.supplier_code,
             c.supplier_name,
-            a.option
+            a.option,
+            a.batch,
+            a.status
         FROM incoming_part_reports a 
         JOIN examiners b ON a.examiner_id = b.id
         JOIN suppliers c ON a.supplier_code = c.supplier_code

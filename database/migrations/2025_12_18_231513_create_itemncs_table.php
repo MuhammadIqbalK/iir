@@ -14,10 +14,12 @@ return new class extends Migration {
             $table->id();
             $table->string('item12nc')->unique();
             $table->string('partname');
+            $table->string('type')->nullable();
             $table->string('quality')->nullable();
             $table->integer('quantity')->default(0);
+            $table->string('unit')->default('Pcs');
             $table->string('status')->default('Active');
-            $table->timestamps();
+            $table->timestamps();  
         });
 
         Schema::table('itemncs', function (Blueprint $table) {

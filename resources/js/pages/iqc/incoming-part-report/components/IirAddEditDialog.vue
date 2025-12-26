@@ -10,6 +10,7 @@ interface Props {
   examiners: any[]
   suppliers: any[]
   options: readonly string[]
+  statuses: readonly string[]
 }
 
 const props = defineProps<Props>()
@@ -75,6 +76,14 @@ defineExpose({
 
             <VCol cols="12" sm="6">
               <AppAutocomplete v-model="props.item.supplier_code" :items="props.suppliers" :rules="[requiredValidator]" required label="Supplier" />
+            </VCol>
+
+            <VCol cols="12" sm="6">
+              <AppTextField v-model="props.item.batch" label="Batch" :rules="[requiredValidator, integerValidator, v => betweenValidator(v, 1, 999999)]" required />
+            </VCol>
+
+            <VCol cols="12" sm="6">
+              <AppAutocomplete v-model="props.item.status" :items="props.statuses" :rules="[requiredValidator]" required label="Status" />
             </VCol>
 
             <VCol cols="12" sm="12">

@@ -44,7 +44,9 @@ class IncomingPartReportSeeder extends Seeder
                 'end' => sprintf("%02d:%02d", rand(9, 17), rand(0, 59)),
                 'duration' => sprintf("%02d:%02d", rand(0, 2), rand(0, 59)),
                 'supplier_code' => $supplierOptions[array_rand($supplierOptions)],
-                'option' => rand(0,1) ? 'local' : 'import',
+                'option' => rand(0,1) ? 'Local' : 'Import',
+                'batch' => 1,
+                'status' => rand(0,1) ? 'N' : 'Y',
             ];
         }
 

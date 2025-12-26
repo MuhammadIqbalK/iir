@@ -16,7 +16,7 @@ function recursiveLayouts(route) {
 const redirects = [
   {
     path: '/',
-    redirect: '/dashboard',
+    redirect: '/incoming-part-report',
   },
 ]
 

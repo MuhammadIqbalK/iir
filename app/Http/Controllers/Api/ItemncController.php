@@ -11,14 +11,36 @@ class ItemncController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $result = Itemnc::select('*')
-                        ->orderBy('item12nc','asc')
-                        ->get();
+        $page = $request->get('page', 1);
+        $perPage = $request->get('per_page', 10);
+
+        $query = Itemnc::query();
+
+        if ($request->filled('item12nc')) {
+            $query->where('item12nc',$request->item12nc);
+        }
+
+        
+        if ($request->has('partname') && $request->partname != '') {
+            $query->where('partname', 'ILIKE', '%' . $request->partname . '%');
+        }
+        
+        // var_dump($query);
+        // exit;
+
+        $total = $query->count();
+        $result = $query->orderBy('item12nc', 'asc')
+            ->offset(($page - 1) * $perPage)
+            ->limit($perPage)
+            ->get();
 
         return response()->json([
-            'data' => $result
+            'data' => $result,
+            'total' => $total,
+            'page' => $page,
+            'per_page' => $perPage
         ]);
     }
 
@@ -41,8 +63,10 @@ class ItemncController extends Controller
         $validated = $request->validate([
             'item12nc' => 'required|string|unique:itemncs,item12nc',
             'partname' => 'required|string',
+            'type' => 'nullable|string',
             'quality' => 'nullable|string',
             'quantity' => 'required|integer',
+            'unit' => 'nullable|string',
             'status' => 'sometimes|string',
         ]);
 
@@ -65,10 +89,12 @@ class ItemncController extends Controller
     public function update(Request $request, Itemnc $itemnc)
     {
         $validated = $request->validate([
-            'item12nc' => 'sometimes|string|unique:itemncs,item12nc,' . $itemnc->id,
-            'partname' => 'sometimes|string',
+            'item12nc' => 'required|string|unique:itemncs,item12nc,' . $itemnc->id,
+            'partname' => 'required|string',
+            'type' => 'nullable|string',
             'quality' => 'nullable|string',
-            'quantity' => 'sometimes|integer',
+            'quantity' => 'required|integer',
+            'unit' => 'nullable|string',
             'status' => 'sometimes|string',
         ]);
 

@@ -21,10 +21,10 @@ const isSmallScreen = () => {
 
 <template>
   <VCol cols="12" md="12">
-    <VCard title="Suppliers List">
+    <VCard title="Materials List">
       <VCardText>
         <div class="d-flex flex-wrap gap-4 mb-4">
-          <VBtn color="success" @click="emit('addItem')">Add Supplier</VBtn>
+          <VBtn color="success" @click="emit('addItem')">Add Material</VBtn>
         </div>
         
         <VDataTableServer 
@@ -36,10 +36,21 @@ const isSmallScreen = () => {
           :loading="props.loading"
           @update:options="emit('update:options', $event)"
         >
+          <!-- Quality -->
+          <template #item.quality="{ item }">
+            <VChip
+              :color="item.quality === 'A' ? 'success' : item.quality === 'B' ? 'warning' : 'error'"
+              size="small"
+              class="text-capitalize"
+            >
+              {{ item.quality }}
+            </VChip>
+          </template>
+
           <!-- Status -->
           <template #item.status="{ item }">
             <VChip
-              :color="item.status === 'Active' ? 'success' : item.status === 'Inactive' ? 'secondary' : 'error'"
+              :color="item.status === 'Active' ? 'success' : 'error'"
               size="small"
               class="text-capitalize"
             >

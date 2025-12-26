@@ -24,6 +24,8 @@ return new class extends Migration {
             $table->string('duration');
             $table->string('supplier_code');
             $table->string('option');
+            $table->integer('batch')->default('1');
+            $table->string('status');
             $table->timestamps();
         });
 

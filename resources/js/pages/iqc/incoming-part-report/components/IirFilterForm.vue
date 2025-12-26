@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+
 interface Props {
   items: any[]
   suppliers: any[]
@@ -7,12 +9,58 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const itemsSelect = defineModel('itemsSelect')
-const suppliersSelect = defineModel('suppliersSelect')
-const optionsSelect = defineModel('optionsSelect')
-const dateRange = defineModel('dateRange')
+const itemsSelect = defineModel<string | undefined>('itemsSelect')
+const suppliersSelect = defineModel<string | undefined>('suppliersSelect')
+const optionsSelect = defineModel<string | undefined>('optionsSelect')
+const dateRange = defineModel<string | undefined>('dateRange')
 
-const emit = defineEmits(['search', 'reset'])
+const emit = defineEmits(['search', 'reset', 'Global', 'Recap'])
+
+const showPrintConfirmation = ref(false)
+const printType = ref<'Global' | 'Recap'>('Global')
+const filterSummary = ref('')
+
+const getFilterSummary = () => {
+  const filters = []
+  
+  if (itemsSelect.value) {
+    filters.push(`Item: ${itemsSelect.value}`)
+  }
+  
+  if (suppliersSelect.value) {
+    filters.push(`Supplier: ${suppliersSelect.value}`)
+  }
+  
+  if (optionsSelect.value) {
+    filters.push(`Option: ${optionsSelect.value}`)
+  }
+  
+  if (dateRange.value) {
+    const dates = (dateRange.value as string).split(' to ')
+    if (dates.length === 2) {
+      filters.push(`Date Range: ${dates[0]} to ${dates[1]}`)
+    } else if (dates.length === 1) {
+      filters.push(`Date: ${dates[0]}`)
+    }
+  }
+  
+  return filters.length > 0 ? filters.join(', ') : 'No filters applied'
+}
+
+const handlePrint = (type: 'Global' | 'Recap') => {
+  printType.value = type
+  filterSummary.value = getFilterSummary()
+  showPrintConfirmation.value = true
+}
+
+const confirmPrint = () => {
+  emit(printType.value)
+  showPrintConfirmation.value = false
+}
+
+const cancelPrint = () => {
+  showPrintConfirmation.value = false
+}
 </script>
 
 <template>
@@ -45,6 +93,14 @@ const emit = defineEmits(['search', 'reset'])
                 Search
               </VBtn>
 
+              <VBtn color="primary" @click="handlePrint('Global')">
+                Print Global
+              </VBtn>
+
+              <VBtn color="warning" @click="handlePrint('Recap')">
+                Print Recap
+              </VBtn>
+
               <VBtn color="error" @click="emit('reset')">
                 Reset Filter
               </VBtn>
@@ -54,4 +110,30 @@ const emit = defineEmits(['search', 'reset'])
       </VCardText>
     </VCard>
   </VCol>
+
+  <!-- Print Confirmation Dialog -->
+  <VDialog :model-value="showPrintConfirmation" @update:model-value="showPrintConfirmation = $event" max-width="500">
+    <VCard>
+      <VCardTitle>
+        Confirm {{ printType }} Print
+      </VCardTitle>
+      <VCardText>
+        <p>Are you sure you want to print {{ printType.toLowerCase() }} report with the following filters?</p>
+        <div v-if="filterSummary" class="mt-2">
+          <VAlert type="info" variant="tonal">
+            <strong>Applied Filters:</strong> {{ filterSummary }}
+          </VAlert>
+        </div>
+        <div v-else class="mt-2">
+          <VAlert type="warning" variant="tonal">
+            No filters applied. This will print all data.
+          </VAlert>
+        </div>
+      </VCardText>
+      <VCardActions>
+        <VBtn color="error" variant="text" @click="cancelPrint">Cancel</VBtn>
+        <VBtn color="primary" @click="confirmPrint">Confirm Print</VBtn>
+      </VCardActions>
+    </VCard>
+  </VDialog>
 </template>
