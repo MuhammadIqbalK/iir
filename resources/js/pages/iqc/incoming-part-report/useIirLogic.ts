@@ -154,7 +154,8 @@ export const useIirLogic = () => {
   }
 
   const buildPrintUrl = (type: 'Global' | 'Recap') => {
-    const baseUrl = `http://localhost/api/ipr-excel-${type.toLowerCase()}`
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '/api'
+    const baseUrl = `${apiBaseUrl}/ipr-excel-${type.toLowerCase()}`
     const params: any = {
       page: 1,
       per_page: 10,
