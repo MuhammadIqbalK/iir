@@ -1,5 +1,18 @@
 <script setup>
-import avatar1 from '@images/avatars/avatar-1.png'
+import { useAuth } from '@/composables/useAuth'
+import avatar from '@images/avatars/avatar.png'
+import { onMounted } from 'vue'
+
+const { logout, user, fetchUser } = useAuth()
+
+const handleLogout = async () => {
+  await logout()
+}
+
+// Fetch user data on component mount
+onMounted(async () => {
+  await fetchUser()
+})
 </script>
 
 <template>
@@ -16,7 +29,7 @@ import avatar1 from '@images/avatars/avatar-1.png'
       color="primary"
       variant="tonal"
     >
-      <VImg :src="avatar1" />
+      <VImg :src="avatar" />
 
       <!-- SECTION Menu -->
       <VMenu
@@ -41,16 +54,18 @@ import avatar1 from '@images/avatars/avatar-1.png'
                     color="primary"
                     variant="tonal"
                   >
-                    <VImg :src="avatar1" />
+                    <VImg :src="avatar" />
                   </VAvatar>
                 </VBadge>
               </VListItemAction>
             </template>
 
             <VListItemTitle class="font-weight-semibold">
-              John Doe
+              {{ user?.userid || 'Loading...' }}
             </VListItemTitle>
-            <VListItemSubtitle>Admin</VListItemSubtitle>
+            <VListItemSubtitle>
+              {{ user?.groupid === '1' ? 'Admin' : 'User' }}
+            </VListItemSubtitle>
           </VListItem>
 
           <VDivider class="my-2" />
@@ -111,7 +126,7 @@ import avatar1 from '@images/avatars/avatar-1.png'
           <VDivider class="my-2" />
 
           <!-- 👉 Logout -->
-          <VListItem to="/login">
+          <VListItem @click="handleLogout">
             <template #prepend>
               <VIcon
                 class="me-2"

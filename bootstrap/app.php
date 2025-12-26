@@ -12,7 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->api(prepend: [
+            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class, // Removed for token-based auth
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ]);
+        
+        // $middleware->statefulApi(); // Removed - using token auth instead
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -361,6 +361,7 @@
     "useId": true,
     "useModel": true,
     "useTemplateRef": true,
-    "dateRangeValidator": true
+    "dateRangeValidator": true,
+    "useAuth": true
   }
 }
