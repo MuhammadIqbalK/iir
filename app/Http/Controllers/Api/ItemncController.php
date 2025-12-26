@@ -27,8 +27,6 @@ class ItemncController extends Controller
             $query->where('partname', 'ILIKE', '%' . $request->partname . '%');
         }
         
-        // var_dump($query);
-        // exit;
 
         $total = $query->count();
         $result = $query->orderBy('item12nc', 'asc')
@@ -64,10 +62,8 @@ class ItemncController extends Controller
             'item12nc' => 'required|string|unique:itemncs,item12nc',
             'partname' => 'required|string',
             'type' => 'nullable|string',
-            'quality' => 'nullable|string',
             'quantity' => 'required|integer',
             'unit' => 'nullable|string',
-            'status' => 'sometimes|string',
         ]);
 
         $itemnc = Itemnc::create($validated);
@@ -92,10 +88,8 @@ class ItemncController extends Controller
             'item12nc' => 'required|string|unique:itemncs,item12nc,' . $itemnc->id,
             'partname' => 'required|string',
             'type' => 'nullable|string',
-            'quality' => 'nullable|string',
             'quantity' => 'required|integer',
             'unit' => 'nullable|string',
-            'status' => 'sometimes|string',
         ]);
 
         $itemnc->update($validated);

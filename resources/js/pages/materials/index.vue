@@ -8,7 +8,7 @@ import { useMaterialsLogic } from './useMaterialsLogic'
 
 const {
   // State
-  qualities, statuses, types, item12ncs, partnames,
+  types, item12ncs, partnames,
   typeSelect, qualitySelect, statusSelect, item12ncSelect, partnameSelect, filterForm,
   editDialog, addDialog, deleteDialog, messageDialog,
   refForm, refEditForm,
@@ -25,10 +25,8 @@ const headers = [
   { title: 'ITEM12NC', key: 'item12nc' },
   { title: 'PART NAME', key: 'partname' },
   { title: 'TYPE', key: 'type' },
-  { title: 'QUALITY', key: 'quality' },
   { title: 'QUANTITY', key: 'quantity' },
   { title: 'UNIT', key: 'unit' },
-  { title: 'STATUS', key: 'status' },
   { title: 'ACTIONS', key: 'actions', sortable: false },
 ]
 </script>
@@ -40,10 +38,8 @@ const headers = [
       ref="filterForm"
       v-model:partnameSelect="partnameSelect"
       v-model:item12ncSelect="item12ncSelect"
-      v-model:qualitySelect="qualitySelect"
       :partnames="partnames"
       :item12ncs="item12ncs"
-      :qualities="qualities"
       @search="searchData"
       @reset="resetFilter"
     />
@@ -68,8 +64,6 @@ const headers = [
       v-model="addDialog"
       :is-edit="false"
       :item="addedItem"
-      :qualities="qualities"
-      :statuses="statuses"
       @save="save"
       @close="close"
     />
@@ -80,8 +74,6 @@ const headers = [
       v-model="editDialog"
       :is-edit="true"
       :item="editedItem"
-      :qualities="qualities"
-      :statuses="statuses"
       @save="save"
       @close="close"
     />

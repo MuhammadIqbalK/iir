@@ -4,8 +4,6 @@ import type { VForm } from 'vuetify/components/VForm'
 
 export const useMaterialsLogic = () => {
   // 👉 Search State
-  const qualities = ['A', 'B', 'C'] as const
-  const statuses = ['Active'] as const // Only 'Active' status is available in the API response
   const types = ref([]) // Will be populated dynamically
   const item12ncs = ref([]) // Will be populated dynamically
   const partnames = ref([]) // Will be populated dynamically
@@ -32,10 +30,8 @@ export const useMaterialsLogic = () => {
     item12nc: '',
     partname: '',
     type: '',
-    quality: 'A',
     quantity: 0,
     unit: 'Pcs',
-    status: 'Active',
   }
 
   const editedItem = ref({ ...defaultItem })
@@ -237,8 +233,6 @@ export const useMaterialsLogic = () => {
   const resetFilter = () => {
     filterForm.value?.reset()
     typeSelect.value = ''
-    qualitySelect.value = ''
-    statusSelect.value = undefined
     item12ncSelect.value = ''
     partnameSelect.value = ''
     
@@ -277,7 +271,7 @@ export const useMaterialsLogic = () => {
 
   return {
     // State
-    qualities, statuses, types, item12ncs, partnames,
+    types, item12ncs, partnames,
     typeSelect, qualitySelect, statusSelect, item12ncSelect, partnameSelect, filterForm,
     editDialog, addDialog, deleteDialog, messageDialog,
     refForm, refEditForm,

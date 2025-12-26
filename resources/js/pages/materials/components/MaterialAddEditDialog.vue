@@ -7,8 +7,6 @@ interface Props {
   modelValue: boolean
   isEdit: boolean
   item: any
-  qualities: readonly string[]
-  statuses: readonly string[]
 }
 
 const props = defineProps<Props>()
@@ -51,11 +49,6 @@ defineExpose({
               <AppTextField v-model="props.item.type" label="Type" :rules="[requiredValidator]" required />
             </VCol>
 
-            <!-- Quality -->
-            <VCol cols="12" sm="6">
-              <AppSelect v-model="props.item.quality" :items="props.qualities" label="Quality" :rules="[requiredValidator]" required />
-            </VCol>
-
             <!-- Quantity -->
             <VCol cols="12" sm="6">
               <AppTextField v-model.number="props.item.quantity" label="Quantity" type="number" :rules="[requiredValidator]" required />
@@ -66,10 +59,6 @@ defineExpose({
               <AppTextField v-model="props.item.unit" label="Unit" :rules="[requiredValidator]" required />
             </VCol>
 
-            <!-- Status -->
-            <VCol cols="12" sm="6">
-              <AppSelect v-model="props.item.status" :items="props.statuses" label="Status" :rules="[requiredValidator]" required />
-            </VCol>
           </VRow>
         </VForm>
       </VCardText>

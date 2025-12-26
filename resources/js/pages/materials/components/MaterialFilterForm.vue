@@ -5,14 +5,12 @@ import type { VForm } from 'vuetify/components/VForm';
 interface Props {
   item12ncs: any[];
   partnames: any[];
-  qualities: readonly string[]
 }
 
 const props = defineProps<Props>()
 
 const item12ncSelect = defineModel('item12ncSelect')
 const partnameSelect = defineModel('partnameSelect')
-const qualitySelect = defineModel('qualitySelect')
 
 const emit = defineEmits(['search', 'reset'])
 
@@ -35,11 +33,6 @@ defineExpose({
 
             <VCol cols="4">
               <AppAutocomplete id="filter-item12nc" v-model="item12ncSelect" :items="props.item12ncs" placeholder="Select Item12NC" label="Item12NC" name="item12nc" clearable :disabled="!!partnameSelect" :hint="partnameSelect ? 'Clear Item12NC to enable' : ''" persistent-hint/>
-            </VCol>
-
-            <VCol cols="4">
-              <AppAutocomplete id="filter-quality" v-model="qualitySelect" :items="props.qualities"
-                placeholder="Select Quality" label="Quality" name="quality" clearable />
             </VCol>
 
             <VCol cols="12" class="d-flex flex-wrap gap-4">

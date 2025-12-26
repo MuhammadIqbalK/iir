@@ -15,17 +15,14 @@ return new class extends Migration {
             $table->string('item12nc')->unique();
             $table->string('partname');
             $table->string('type')->nullable();
-            $table->string('quality')->nullable();
             $table->integer('quantity')->default(0);
             $table->string('unit')->default('Pcs');
-            $table->string('status')->default('Active');
             $table->timestamps();  
         });
 
         Schema::table('itemncs', function (Blueprint $table) {
             $table->index('item12nc');
             $table->index('partname');
-            $table->index('status');
         });
     }
 
