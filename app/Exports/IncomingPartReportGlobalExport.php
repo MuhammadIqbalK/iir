@@ -131,7 +131,7 @@ class IncomingPartReportGlobalExport implements
     public function columnWidths(): array
     {
         return [
-            'A' => 6, 'B' => 30, 'C' => 18, 'D' => 35, 'E' => 15, 'F' => 15, 'G' => 12, 'H' => 12, 'I' => 18,
+            'A' => 6, 'B' => 45, 'C' => 18, 'D' => 35, 'E' => 15, 'F' => 15, 'G' => 12, 'H' => 12, 'I' => 18,
         ];
     }
     
@@ -247,7 +247,7 @@ class IncomingPartReportGlobalExport implements
                     $currentRow = $summaryStartRow + $index;
                     
                     // Merge cell agar teks panjang muat
-                    $sheet->mergeCells('B'.$currentRow.':C'.$currentRow);
+                    $sheet->mergeCells('B'.$currentRow.':B'.$currentRow);
                     $sheet->setCellValue('B'.$currentRow, $text);
                     
                     // Style untuk Summary
