@@ -36,28 +36,6 @@ const isSmallScreen = () => {
           :loading="props.loading"
           @update:options="emit('update:options', $event)"
         >
-          <!-- Quality -->
-          <template #item.quality="{ item }">
-            <VChip
-              :color="item.quality === 'A' ? 'success' : item.quality === 'B' ? 'warning' : 'error'"
-              size="small"
-              class="text-capitalize"
-            >
-              {{ item.quality }}
-            </VChip>
-          </template>
-
-          <!-- Status -->
-          <template #item.status="{ item }">
-            <VChip
-              :color="item.status === 'Active' ? 'success' : 'error'"
-              size="small"
-              class="text-capitalize"
-            >
-              {{ item.status }}
-            </VChip>
-          </template>
-
           <!-- Actions -->
           <template #item.actions="{ item }">
             <div class="d-flex gap-1">

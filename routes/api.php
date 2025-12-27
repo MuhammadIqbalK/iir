@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Items
     Route::apiResource('itemncs', \App\Http\Controllers\Api\ItemncController::class);
     Route::get('itemncs-dropdown', [\App\Http\Controllers\Api\ItemncController::class, 'itemncDropdown']);
+    Route::get('itemncs-category-dropdown', [\App\Http\Controllers\Api\ItemncController::class, 'itemncCategoryDropdown']);
 });
 
 // 404 Handler

@@ -7,6 +7,7 @@ interface Props {
   modelValue: boolean
   isEdit: boolean
   item: any
+  categories: any[]
 }
 
 const props = defineProps<Props>()
@@ -46,17 +47,22 @@ defineExpose({
 
             <!-- Type -->
             <VCol cols="12" sm="6">
-              <AppTextField v-model="props.item.type" label="Type" :rules="[requiredValidator]" required />
+              <AppTextField v-model="props.item.type" label="Type" />
             </VCol>
 
-            <!-- Quantity -->
+            <!-- WHQ -->
             <VCol cols="12" sm="6">
-              <AppTextField v-model.number="props.item.quantity" label="Quantity" type="number" :rules="[requiredValidator]" required />
+              <AppTextField v-model="props.item.whq" label="WHQ" />
             </VCol>
 
             <!-- Unit -->
             <VCol cols="12" sm="6">
-              <AppTextField v-model="props.item.unit" label="Unit" :rules="[requiredValidator]" required />
+              <AppTextField v-model="props.item.unit" label="Unit" />
+            </VCol>
+
+            <!-- Category -->
+            <VCol cols="12" sm="6">
+              <AppSelect v-model="props.item.category" label="Category" :items="props.categories" clearable />
             </VCol>
 
           </VRow>

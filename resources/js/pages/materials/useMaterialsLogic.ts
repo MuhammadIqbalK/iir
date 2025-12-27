@@ -7,6 +7,7 @@ export const useMaterialsLogic = () => {
   const types = ref([]) // Will be populated dynamically
   const item12ncs = ref([]) // Will be populated dynamically
   const partnames = ref([]) // Will be populated dynamically
+  const categories = ref([]) // Will be populated dynamically
 
   const typeSelect = ref('')
   const qualitySelect = ref('')
@@ -26,12 +27,13 @@ export const useMaterialsLogic = () => {
   const refEditForm = ref<VForm>()
 
   const defaultItem = {
-    id: -1,
+    id: null,
     item12nc: '',
     partname: '',
     type: '',
-    quantity: 0,
+    whq: '',
     unit: 'Pcs',
+    category: null,
   }
 
   const editedItem = ref({ ...defaultItem })
@@ -59,6 +61,10 @@ export const useMaterialsLogic = () => {
       types.value = response.data.map((s: any) => ({ title: s.type, value: s.type }))
       item12ncs.value = response.data.map((s: any) => ({ title: s.item12nc, value: s.item12nc }))
       partnames.value = response.data.map((s: any) => ({ title: s.partname, value: s.partname }))
+      
+      // Fetch categories
+      const categoryResponse = await $api('/api/itemncs-category-dropdown')
+      categories.value = categoryResponse.data.map((s: any) => ({ title: s.description, value: s.id }))
     } catch (error) {
       console.error('Error fetching dropdowns:', error)
     }
@@ -271,7 +277,7 @@ export const useMaterialsLogic = () => {
 
   return {
     // State
-    types, item12ncs, partnames,
+    types, item12ncs, partnames, categories,
     typeSelect, qualitySelect, statusSelect, item12ncSelect, partnameSelect, filterForm,
     editDialog, addDialog, deleteDialog, messageDialog,
     refForm, refEditForm,

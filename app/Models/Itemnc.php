@@ -13,7 +13,8 @@ class Itemnc extends Model
         'item12nc',
         'partname',
         'type',
-        'quantity',
+        'whq',
         'unit',
+        'category',
     ];
 }

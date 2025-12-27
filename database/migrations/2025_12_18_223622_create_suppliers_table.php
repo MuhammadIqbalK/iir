@@ -14,11 +14,11 @@ return new class extends Migration {
             $table->id();
             $table->string('supplier_name');
             $table->string('supplier_code')->unique();
-            $table->string('contact_person');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('address');
-            $table->string('status');
+            $table->string('contact_person')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
+            $table->string('status')->default('Active');
             $table->timestamps();
         });
 

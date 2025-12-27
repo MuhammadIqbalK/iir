@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Itemnc;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ItemncController extends Controller
 {
@@ -17,6 +18,8 @@ class ItemncController extends Controller
         $perPage = $request->get('per_page', 10);
 
         $query = Itemnc::query();
+        $query->select('itemncs.id','item12nc','partname','type','whq','unit','description as category');
+        $query->join('itemncs_category', 'itemncs.category', '=', 'itemncs_category.id');
 
         if ($request->filled('item12nc')) {
             $query->where('item12nc',$request->item12nc);
@@ -53,6 +56,18 @@ class ItemncController extends Controller
         ]);
     }
 
+        public function itemncCategoryDropdown()
+    {
+        $result = DB::table('itemncs_category')
+                        ->select('id','description')
+                        ->orderBy('description','asc')
+                        ->get();
+
+        return response()->json([
+            'data' => $result
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -62,8 +77,9 @@ class ItemncController extends Controller
             'item12nc' => 'required|string|unique:itemncs,item12nc',
             'partname' => 'required|string',
             'type' => 'nullable|string',
-            'quantity' => 'required|integer',
+            'whq' => 'nullable|string',
             'unit' => 'nullable|string',
+            'category' => 'nullable|integer',
         ]);
 
         $itemnc = Itemnc::create($validated);
@@ -88,8 +104,9 @@ class ItemncController extends Controller
             'item12nc' => 'required|string|unique:itemncs,item12nc,' . $itemnc->id,
             'partname' => 'required|string',
             'type' => 'nullable|string',
-            'quantity' => 'required|integer',
+            'whq' => 'nullable|string',
             'unit' => 'nullable|string',
+            'category' => 'nullable|integer',
         ]);
 
         $itemnc->update($validated);

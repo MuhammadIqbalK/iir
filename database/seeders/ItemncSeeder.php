@@ -12,42 +12,48 @@ class ItemncSeeder extends Seeder
      */
     public function run(): void
     {
+        $category = rand(1,9);
         
         $items = [
         [
             'item12nc' => '4206 136 58775', 
             'partname' => 'Mail Interface Turbo', 
             'type' => 'Turbo Module',        // sub-jenis / spesifikasi
-            'quantity' => 1000, 
+            'whq' => 1000, 
             'unit' => 'Pcs', 
+            'category' => $category,
         ],
         [
             'item12nc' => '4206 136 58776', 
             'partname' => 'Hydraulic Control Valve', 
             'type' => 'Valve Type X', 
-            'quantity' => 500, 
+            'whq' => 500, 
             'unit' => 'Pcs', 
+            'category' => $category,
         ],
         [
             'item12nc' => '4206 136 58777', 
             'partname' => 'Electronic Sensor Module', 
             'type' => 'Sensor Module V2', 
-            'quantity' => 750, 
+            'whq' => 750, 
             'unit' => 'Pcs', 
+            'category' => $category,
         ],
         [
             'item12nc' => '4206 136 58778', 
             'partname' => 'Cooling Fan Assembly', 
             'type' => 'Fan 12V', 
-            'quantity' => 1200, 
+            'whq' => 1200, 
             'unit' => 'Pcs', 
+            'category' => $category,
         ],
         [
             'item12nc' => '4206 136 58779', 
             'partname' => 'Power Supply Unit', 
             'type' => 'PSU 500W', 
-            'quantity' => 300, 
+            'whq' => 300, 
             'unit' => 'Pcs', 
+            'category' => $category,
         ],
     ];
 
