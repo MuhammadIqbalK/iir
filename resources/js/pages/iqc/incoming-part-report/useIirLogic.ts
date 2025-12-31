@@ -37,7 +37,7 @@ export const useIirLogic = () => {
     nodoc: '',
     quantity: 1,
     samplesize: 1,
-    gilevel: 1,
+    gilevel: 2,
     examiner_id: '',
     start: '',
     end: '',
@@ -98,7 +98,8 @@ export const useIirLogic = () => {
 
       rawItems.value = itemsRes.data
       items.value = itemsRes.data.map((i: any) => ({ title: `${i.item12nc} (-) ${i.partname}`, value: i.item12nc }))
-      itemsDialog.value = itemsRes.data.map((idialog: any) => ({ title: idialog.item12nc, value: idialog.item12nc }))
+      //itemsDialog.value = itemsRes.data.map((idialog: any) => ({ title: idialog.item12nc, value: idialog.item12nc }))
+      itemsDialog.value = itemsRes.data.map((idialog: any) => ({ title: idialog.partname, value: idialog.partname }))
       suppliers.value = suppliersRes.data.map((s: any) => ({ title: s.supplier_name, value: s.supplier_code }))
       examiners.value = examinersRes.data.map((e: any) => ({ title: e.name, value: e.id }))
     } catch (error) {
@@ -108,7 +109,7 @@ export const useIirLogic = () => {
 
   const fetchTableData = async (options: any = null) => {
     loading.value = true
-    
+
     if (options && typeof options === 'object') {
       if ('page' in options) page.value = options.page
       if ('itemsPerPage' in options) itemsPerPage.value = options.itemsPerPage
@@ -123,7 +124,7 @@ export const useIirLogic = () => {
       if (itemsSelect.value) params.itemnc = itemsSelect.value
       if (suppliersSelect.value) params.supplier = suppliersSelect.value
       if (optionsSelect.value) params.option = optionsSelect.value
-      
+
       if (dateRange.value) {
         const dates = dateRange.value.split(' to ')
         if (dates.length === 2) {
@@ -136,14 +137,14 @@ export const useIirLogic = () => {
       }
 
       const response = await $api('/api/incoming-part-reports', { params })
-      
+
       userList.value = response.data.map((item: any) => ({
         ...item,
         examiner_id: item.examiner_id ? Number(item.examiner_id) : null,
         supplier_code: item.supplier_code ? String(item.supplier_code) : null,
         option: item.option ? (item.option.charAt(0).toUpperCase() + item.option.slice(1).toLowerCase()) : null
       }))
-      
+
       totalItems.value = response.total || response.meta?.total || 0
 
     } catch (error) {
@@ -155,14 +156,14 @@ export const useIirLogic = () => {
 
   const buildPrintParams = () => {
     const params: any = {
-      page:1,
+      page: 1,
       per_page: 10,
     }
 
     if (itemsSelect.value) params.itemnc = itemsSelect.value
     if (suppliersSelect.value) params.supplier = suppliersSelect.value
     if (optionsSelect.value) params.option = optionsSelect.value
-    
+
     if (dateRange.value) {
       const dates = dateRange.value.split(' to ')
       if (dates.length === 2) {
@@ -180,11 +181,11 @@ export const useIirLogic = () => {
   const printGlobal = async () => {
     try {
       const params = buildPrintParams()
-      const response = await $api('/api/ipr-excel-global', { 
+      const response = await $api('/api/ipr-excel-global', {
         params,
         responseType: 'blob'
       })
-      
+
       // Create download link
       const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
       const url = window.URL.createObjectURL(blob)
@@ -204,11 +205,11 @@ export const useIirLogic = () => {
   const printRecap = async () => {
     try {
       const params = buildPrintParams()
-      const response = await $api('/api/ipr-excel-recap', { 
+      const response = await $api('/api/ipr-excel-recap', {
         params,
         responseType: 'blob'
       })
-      
+
       // Create download link
       const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
       const url = window.URL.createObjectURL(blob)
@@ -232,7 +233,7 @@ export const useIirLogic = () => {
     const [endHours, endMinutes] = end.split(':').map(Number)
     if (isNaN(startHours) || isNaN(startMinutes) || isNaN(endHours) || isNaN(endMinutes)) return ''
     let diffMs = (endHours * 60 + endMinutes) - (startHours * 60 + startMinutes)
-    if (diffMs < 0) diffMs += 24 * 60 
+    if (diffMs < 0) diffMs += 24 * 60
     const hours = Math.floor(diffMs / 60)
     const minutes = diffMs % 60
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
@@ -243,7 +244,7 @@ export const useIirLogic = () => {
     messageText.value = text
     messageErrors.value = errors
     messageDialog.value = true
-    
+
     switch (type) {
       case 'success':
         messageIcon.value = 'tabler-circle-check'
@@ -382,16 +383,15 @@ export const useIirLogic = () => {
   // 👉 Watchers
   // Watchers removed to prevent double fetch with VDataTableServer @update:options
 
-  watch(() => addedItem.value.itemnc, (newVal) => {
-    const item = rawItems.value.find((i: any) => i.item12nc === newVal)
-    if (item) addedItem.value.partname = item.partname
+  watch(() => addedItem.value.partname, (newVal) => {
+    const item = rawItems.value.find((i: any) => i.partname === newVal)
+    if (item) addedItem.value.itemnc = item.item12nc
   })
 
-  watch(() => editedItem.value.itemnc, (newVal) => {
-    const item = rawItems.value.find((i: any) => i.item12nc === newVal)
-    if (item) editedItem.value.partname = item.partname
+  watch(() => editedItem.value.partname, (newVal) => {
+    const item = rawItems.value.find((i: any) => i.partname === newVal)
+    if (item) editedItem.value.itemnc = item.item12nc
   })
-
   watch([() => addedItem.value.start, () => addedItem.value.end], ([newStart, newEnd]) => {
     addedItem.value.duration = calculateDuration(newStart, newEnd)
   })
@@ -407,14 +407,14 @@ export const useIirLogic = () => {
 
   return {
     // State
-    items, itemsDialog, suppliers, examiners, options,statuses,
-    itemsSelect, suppliersSelect, optionsSelect, dateRange, filterForm,statusSelect,
+    items, itemsDialog, suppliers, examiners, options, statuses,
+    itemsSelect, suppliersSelect, optionsSelect, dateRange, filterForm, statusSelect,
     editDialog, addDialog, deleteDialog, messageDialog,
     refForm, refEditForm,
     editedItem, editedIndex, addedItem,
     userList, totalItems, itemsPerPage, page, loading,
     messageTitle, messageText, messageIcon, messageColor, messageErrors,
-    
+
     // Methods
     fetchTableData, editItem, addItem, deleteItem, close, closeDelete,
     save, deleteItemConfirm, searchData, resetFilter, printGlobal, printRecap
