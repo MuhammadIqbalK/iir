@@ -25,6 +25,12 @@ export default [
     to: { name: 'suppliers' },
     icon: { icon: 'tabler-shopping-cart' },
   },
+  {
+    title: 'Inspector',
+    to: { name: 'examiners' },
+    icon: { icon: 'tabler-user' },
+  },
+
 
   // {
   //   title: 'QC Handover',

@@ -1,9 +1,9 @@
 export default [
-  {
-    // title: 'Dashboard',
-    // to: { name: 'dashboard' },
-    // icon: { icon: 'tabler-smart-home' },
-  },
+  // {
+  //   title: 'Dashboard',
+  //   to: { name: 'dashboard' },
+  //   icon: { icon: 'tabler-smart-home' },
+  // },
 
   {
     title: 'Materials',
@@ -25,6 +25,12 @@ export default [
     to: { name: 'suppliers' },
     icon: { icon: 'tabler-shopping-cart' },
   },
+  {
+    title: 'Inspector',
+    to: { name: 'examiners' },
+    icon: { icon: 'tabler-user' },
+  },
+
 
   // {
   //   title: 'QC Handover',

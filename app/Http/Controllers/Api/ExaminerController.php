@@ -11,14 +11,29 @@ class ExaminerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+    public function index(Request $request)
     {
-        $result = Examiner::select('*')
-                        ->orderBy('name','asc')
-                        ->get();
+        $page = $request->get('page', 1);
+        $perPage = $request->get('per_page', 10);
+
+        $query = Examiner::query();
+
+        if ($request->has('name') && $request->name != '') {
+            $query->where('name', 'ILIKE', '%' . $request->name . '%');
+        }
+
+        $total = $query->count();
+        $result = $query->orderBy('name', 'asc')
+            ->offset(($page - 1) * $perPage)
+            ->limit($perPage)
+            ->get();
 
         return response()->json([
-           'data' => $result,
+            'data' => $result,
+            'total' => $total,
+            'page' => $page,
+            'per_page' => $perPage
         ]);
     }
 
@@ -40,9 +55,6 @@ class ExaminerController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
-            'employee_id' => 'required|string|unique:examiners,employee_id',
-            'email' => 'nullable|email',
-            'status' => 'sometimes|string',
         ]);
 
         $examiner = Examiner::create($validated);
@@ -65,9 +77,6 @@ class ExaminerController extends Controller
     {
         $validated = $request->validate([
             'name' => 'sometimes|string',
-            'employee_id' => 'sometimes|string|unique:examiners,employee_id,' . $examiner->id,
-            'email' => 'nullable|email',
-            'status' => 'sometimes|string',
         ]);
 
         $examiner->update($validated);
