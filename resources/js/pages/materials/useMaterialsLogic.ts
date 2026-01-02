@@ -61,7 +61,7 @@ export const useMaterialsLogic = () => {
       types.value = response.data.map((s: any) => ({ title: s.type, value: s.type }))
       item12ncs.value = response.data.map((s: any) => ({ title: s.item12nc, value: s.item12nc }))
       partnames.value = response.data.map((s: any) => ({ title: s.partname, value: s.partname }))
-      
+
       // Fetch categories
       const categoryResponse = await $api('/api/itemncs-category-dropdown')
       categories.value = categoryResponse.data.map((s: any) => ({ title: s.description, value: s.id }))
@@ -73,7 +73,7 @@ export const useMaterialsLogic = () => {
   const fetchTableData = async (options: any = null) => {
     // Guard to prevent concurrent fetches which cause double requests
     if (loading.value) return
-    
+
     // Update local state from table options if provided (e.g. from @update:options)
     if (options && typeof options === 'object') {
       if ('page' in options) page.value = options.page
@@ -94,7 +94,7 @@ export const useMaterialsLogic = () => {
       if (typeSelect.value) params.type = typeSelect.value
 
       const response = await $api('/api/itemncs', { params })
-      
+
       materialList.value = response.data
       totalItems.value = response.total || 0
 
@@ -110,7 +110,7 @@ export const useMaterialsLogic = () => {
     messageText.value = text
     messageErrors.value = errors
     messageDialog.value = true
-    
+
     switch (type) {
       case 'success':
         messageIcon.value = 'tabler-circle-check'
@@ -134,7 +134,7 @@ export const useMaterialsLogic = () => {
   const close = () => {
     editDialog.value = false
     addDialog.value = false
-    
+
     nextTick(() => {
       refForm.value?.resetValidation()
       refEditForm.value?.resetValidation()
@@ -154,20 +154,33 @@ export const useMaterialsLogic = () => {
 
   const save = async () => {
     const { valid } = await (editedIndex.value > -1 ? refEditForm.value?.validate() : refForm.value?.validate()) || { valid: false }
-    
+
     if (!valid) return
 
     try {
       if (editedIndex.value > -1) {
+        // Convert category to number if it's not null
+        const itemToSave = {
+          ...editedItem.value,
+          category: editedItem.value.category ? Number(editedItem.value.category) : null
+        }
+
         await $api(`/api/itemncs/${editedItem.value.id}`, {
           method: 'PUT',
-          body: editedItem.value
+          body: itemToSave
         })
         showMessage('Success', 'Material updated successfully', 'success')
       } else {
+        // Convert category to number if it's not null, and exclude id field for POST
+        const { id, ...itemData } = addedItem.value
+        const itemToSave = {
+          ...itemData,
+          category: addedItem.value.category ? Number(addedItem.value.category) : null
+        }
+
         await $api('/api/itemncs', {
           method: 'POST',
-          body: addedItem.value
+          body: itemToSave
         })
         showMessage('Success', 'Material created successfully', 'success')
       }
@@ -178,11 +191,11 @@ export const useMaterialsLogic = () => {
       console.error('Error saving material:', error)
       const errorData = error.data
       let errorMessages: string[] = []
-      
+
       if (errorData && errorData.errors) {
         errorMessages = Object.values(errorData.errors).flat() as string[]
       }
-      
+
       showMessage('Error', errorData?.message || 'Failed to save material', 'error', errorMessages)
     }
   }
@@ -206,7 +219,7 @@ export const useMaterialsLogic = () => {
     editedIndex.value = materialList.value.indexOf(item)
     editedItem.value = { ...item }
     editDialog.value = true
-    
+
     nextTick(() => {
       refEditForm.value?.resetValidation()
     })
@@ -241,7 +254,7 @@ export const useMaterialsLogic = () => {
     typeSelect.value = ''
     item12ncSelect.value = ''
     partnameSelect.value = ''
-    
+
     if (page.value === 1) {
       fetchTableData()
     } else {
@@ -284,7 +297,7 @@ export const useMaterialsLogic = () => {
     editedItem, editedIndex, addedItem,
     materialList, totalItems, itemsPerPage, page, loading,
     messageTitle, messageText, messageIcon, messageColor, messageErrors,
-    
+
     // Methods
     fetchTableData, editItem, addItem, deleteItem, close, closeDelete,
     save, deleteItemConfirm, searchData, resetFilter
