@@ -19,7 +19,7 @@ class ItemncController extends Controller
 
         $query = Itemnc::query();
         $query->select('itemncs.id','item12nc','partname','type','whq','unit','description as category');
-        $query->join('itemncs_category', 'itemncs.category', '=', 'itemncs_category.id');
+        $query->leftJoin('itemncs_category', 'itemncs.category', '=', 'itemncs_category.id');
 
         if ($request->filled('item12nc')) {
             $query->where('item12nc',$request->item12nc);
