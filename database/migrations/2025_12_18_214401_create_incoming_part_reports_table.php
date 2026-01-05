@@ -16,12 +16,12 @@ return new class extends Migration {
             $table->string('itemnc');
             $table->string('nodoc');
             $table->integer('quantity');
-            $table->integer('samplesize');
+            $table->integer('samplesize')->nullable();
             $table->integer('gilevel');
             $table->integer('examiner_id');
-            $table->time('start');
-            $table->time('end');
-            $table->string('duration');
+            $table->time('start')->nullable();
+            $table->time('end')->nullable();
+            $table->string('duration')->nullable();
             $table->string('supplier_code');
             $table->string('option');
             $table->integer('batch')->default('1');

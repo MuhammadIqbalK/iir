@@ -36,7 +36,7 @@ export const useIirLogic = () => {
     partname: '',
     nodoc: '',
     quantity: 1,
-    samplesize: 1,
+    samplesize: '',
     gilevel: 2,
     examiner_id: '',
     start: '',

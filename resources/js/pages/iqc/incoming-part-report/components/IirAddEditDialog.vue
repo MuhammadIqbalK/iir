@@ -55,8 +55,7 @@ defineExpose({
             </VCol>
 
             <VCol cols="12" sm="6">
-              <AppTextField v-model="props.item.samplesize" label="Sample Size" type="number"
-                :rules="[requiredValidator, integerValidator, v => betweenValidator(v, 1, 999999)]" required />
+              <AppTextField v-model="props.item.samplesize" label="Sample Size" type="number" />
             </VCol>
 
             <VCol cols="12" sm="6">
@@ -70,12 +69,12 @@ defineExpose({
             </VCol>
 
             <VCol cols="12" sm="6">
-              <AppTimePicker24 v-model="props.item.start" :rules="[requiredValidator]" required label="Start Time"
+              <AppTimePicker24 v-model="props.item.start" label="Start Time"
                 placeholder="HH:MM" />
             </VCol>
 
             <VCol cols="12" sm="6">
-              <AppTimePicker24 v-model="props.item.end" :rules="[requiredValidator]" required label="End Time"
+              <AppTimePicker24 v-model="props.item.end" label="End Time"
                 placeholder="HH:MM" />
             </VCol>
 

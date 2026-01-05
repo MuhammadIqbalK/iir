@@ -3,6 +3,9 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Request;
+
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,12 +16,20 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->api(prepend: [
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class, // Removed for token-based auth
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
-        
-        // $middleware->statefulApi(); // Removed - using token auth instead
+
+        // ⛔ MATIKAN redirect ke route "login"
+        $middleware->redirectGuestsTo(fn () => null);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
-    })->create();
+        $exceptions->render(function (
+            AuthenticationException $e,
+            Request $request
+        ) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        });
+    })
+    ->create();
