@@ -152,19 +152,24 @@ class IncomingPartReportGlobalExport implements
                 // 2. Hitung Statistik
                 $totalY = 0;
                 $totalN = 0;
+                $totalqtyY = 0;
+                $totalqtyN = 0;
 
                 foreach ($data as $row) {
                     $status = strtoupper($row->status ?? 'N');
                     if ($status === 'Y') {
                         $totalY++;
+                        $totalqtyY += $row->jumlah ?? 0;
                     } else {
                         $totalN++;
+                        $totalqtyN += $row->jumlah ?? 0;
                     }
                 }
 
                 $totalBatch = $totalY + $totalN;
                 $percentY = $totalBatch > 0 ? round(($totalY / $totalBatch) * 100, 1) : 0;
                 $percentN = $totalBatch > 0 ? round(($totalN / $totalBatch) * 100, 1) : 0;
+                $totalAllqty = $totalqtyY + $totalqtyN;
 
              // 3. LOGIKA TANGGAL (Filter vs Min/Max)
                 
@@ -237,7 +242,10 @@ class IncomingPartReportGlobalExport implements
                     "Total Batch Diterima Keseluruhan = $totalY",
                     "Total Batch Ditolak Keseluruhan = $totalN",
                     "% Batch Diterima Keseluruhan = " . $percentY . "%",
-                    "% Batch Ditolak Keseluruhan = " . $percentN . "%"
+                    "% Batch Ditolak Keseluruhan = " . $percentN . "%",
+                    "Total Quantity Diterima Keseluruhan = $totalqtyY",
+                    "Total Quantity Ditolak Keseluruhan = $totalqtyN",
+                    "Total Quantity Keseluruhan = $totalAllqty",
                 ];
 
                 $summaryStartRow = $rowNumber + 1;
