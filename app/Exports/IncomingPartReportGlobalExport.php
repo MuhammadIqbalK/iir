@@ -230,7 +230,7 @@ class IncomingPartReportGlobalExport implements
                     $sheet->setCellValue('E'.$rowNumber, $item->tglmasuk ? date('d/m/Y', strtotime($item->tglmasuk)) : '-');
                     $sheet->setCellValue('F'.$rowNumber, $item->type ?? '-');
                     $sheet->setCellValue('G'.$rowNumber, $item->batch_ke ?? '-');
-                    $sheet->setCellValue('H'.$rowNumber, number_format($item->jumlah ?? 0, 0, ',', '.'));
+                    $sheet->setCellValue('H'.$rowNumber, $item->jumlah ?? 0);
                     $sheet->setCellValue('I'.$rowNumber, strtoupper($item->status ?? 'N'));
                     $rowNumber++;
                 }
