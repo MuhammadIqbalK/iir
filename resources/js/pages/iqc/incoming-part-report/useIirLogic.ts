@@ -99,7 +99,7 @@ export const useIirLogic = () => {
       rawItems.value = itemsRes.data
       items.value = itemsRes.data.map((i: any) => ({ title: `${i.item12nc} (-) ${i.partname}`, value: i.item12nc }))
       //itemsDialog.value = itemsRes.data.map((idialog: any) => ({ title: idialog.item12nc, value: idialog.item12nc }))
-      itemsDialog.value = itemsRes.data.map((idialog: any) => ({ title: idialog.partname, value: idialog.partname }))
+      itemsDialog.value = itemsRes.data.map((idialog: any) => ({ title: `${idialog.item12nc} (-) ${idialog.partname}`, value: idialog.partname }))
       suppliers.value = suppliersRes.data.map((s: any) => ({ title: s.supplier_name, value: s.supplier_code }))
       examiners.value = examinersRes.data.map((e: any) => ({ title: e.name, value: e.id }))
     } catch (error) {
